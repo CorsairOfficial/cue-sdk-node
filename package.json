@@ -18,9 +18,9 @@
   "binary": {
     "module_name": "cue_sdk",
     "module_path": "./lib/binding/{configuration}/{node_abi}-{platform}-{arch}/",
-    "remote_path": "./cue-sdk/archive/",
+    "remote_path": "./releases/download/v{version}",
     "package_name": "{module_name}-v{version}-{node_abi}-{platform}-{arch}.tar.gz",
-    "host": "https://github.com/intrueder"
+    "host": "https://github.com/intrueder/cue-sdk"
   },
   "dependencies": {
     "node-addon-api": "1.6.2",
