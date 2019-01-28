@@ -250,6 +250,14 @@ Napi::Array corsairGetLedPositionsByDeviceIndex(const Napi::CallbackInfo &info)
   return arr;
 }
 
+Napi::Number corsairGetLedIdForKeyName(const Napi::CallbackInfo &info)
+{
+  const auto env = info.Env();
+  const auto keyName = info[0].As<Napi::String>().Utf8Value()[0];
+  const auto result = CorsairGetLedIdForKeyName(keyName);
+  return Napi::Number::New(env, result);
+}
+
 Napi::Boolean corsairRequestControl(const Napi::CallbackInfo &info)
 {
   const auto env = info.Env();
@@ -315,7 +323,7 @@ Napi::Object Init(Napi::Env env, Napi::Object exports)
   //  exports["CorsairSetLedsColorsAsync"] = Napi::Function::New(env, corsairSetLedsColorsAsync);
   exports["CorsairGetLedPositions"] = Napi::Function::New(env, corsairGetLedPositions);
   exports["CorsairGetLedPositionsByDeviceIndex"] = Napi::Function::New(env, corsairGetLedPositionsByDeviceIndex);
-  //  exports["CorsairGetLedIdForKeyName"] = Napi::Function::New(env, corsairGetLedIdForKeyName);
+  exports["CorsairGetLedIdForKeyName"] = Napi::Function::New(env, corsairGetLedIdForKeyName);
 
   exports["CorsairRequestControl"] = Napi::Function::New(env, corsairRequestControl);
   exports["CorsairReleaseControl"] = Napi::Function::New(env, corsairReleaseControl);
