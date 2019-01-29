@@ -3,7 +3,7 @@
   "author": "Tymur Mudzhyri",
   "license": "MIT",
   "private": true,
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A Node.js native wrapper around CUE SDK",
   "main": "index.js",
   "scripts": {

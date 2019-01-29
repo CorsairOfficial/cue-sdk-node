@@ -205,6 +205,42 @@ Napi::Boolean corsairSetLedsColorsFlushBuffer(const Napi::CallbackInfo &info)
   return Napi::Boolean::New(env, result);
 }
 
+Napi::Boolean corsairSetLedsColorsFlushBufferAsync(const Napi::CallbackInfo &info)
+{
+  const auto env = info.Env();
+  const auto callback = info[0].As<Napi::Function>();
+
+  // TODO: add support for callbacks if https://github.com/nodejs/node-addon-api/issues/312 is ready
+  const bool result = CorsairSetLedsColorsFlushBufferAsync(nullptr, nullptr);
+
+  return Napi::Boolean::New(env, result);
+}
+
+Napi::Boolean corsairSetLedsColorsAsync(const Napi::CallbackInfo &info)
+{
+  const auto env = info.Env();
+  auto colors = info[0].As<Napi::Array>();
+  auto len = colors.Length();
+  CorsairLedColor *ledsColors = new CorsairLedColor[len]();
+  for (size_t i = 0; i < len; i++)
+  {
+    auto c = colors.Get(i).As<Napi::Object>();
+    CorsairLedColor led = {
+        static_cast<CorsairLedId>(c.Get("ledId").As<Napi::Number>().Int32Value()),
+        static_cast<int>(c.Get("r").As<Napi::Number>().Int32Value()),
+        static_cast<int>(c.Get("g").As<Napi::Number>().Int32Value()),
+        static_cast<int>(c.Get("b").As<Napi::Number>().Int32Value())};
+    ledsColors[i] = led;
+  }
+
+  // TODO: add support for callbacks if https://github.com/nodejs/node-addon-api/issues/312 is ready
+  const auto result = CorsairSetLedsColorsAsync(len, ledsColors, nullptr, nullptr);
+
+  delete [] ledsColors;
+
+  return Napi::Boolean::New(env, result);
+}
+
 Napi::Array corsairGetLedPositions(const Napi::CallbackInfo &info)
 {
   const auto env = info.Env();
@@ -248,6 +284,14 @@ Napi::Array corsairGetLedPositionsByDeviceIndex(const Napi::CallbackInfo &info)
   }
 
   return arr;
+}
+
+Napi::Number corsairGetLedIdForKeyName(const Napi::CallbackInfo &info)
+{
+  const auto env = info.Env();
+  const auto keyName = info[0].As<Napi::String>().Utf8Value()[0];
+  const auto result = CorsairGetLedIdForKeyName(keyName);
+  return Napi::Number::New(env, result);
 }
 
 Napi::Boolean corsairRequestControl(const Napi::CallbackInfo &info)
@@ -311,16 +355,17 @@ Napi::Object Init(Napi::Env env, Napi::Object exports)
   exports["CorsairGetLedsColorsByDeviceIndex"] = Napi::Function::New(env, corsairGetLedsColorsByDeviceIndex);
   exports["CorsairSetLedsColorsBufferByDeviceIndex"] = Napi::Function::New(env, corsairSetLedsColorsBufferByDeviceIndex);
   exports["CorsairSetLedsColorsFlushBuffer"] = Napi::Function::New(env, corsairSetLedsColorsFlushBuffer);
-  //  exports["CorsairSetLedsColorsFlushBufferAsync"] = Napi::Function::New(env, corsairSetLedsColorsFlushBufferAsync);
-  //  exports["CorsairSetLedsColorsAsync"] = Napi::Function::New(env, corsairSetLedsColorsAsync);
+  exports["CorsairSetLedsColorsFlushBufferAsync"] = Napi::Function::New(env, corsairSetLedsColorsFlushBufferAsync);
+  exports["CorsairSetLedsColorsAsync"] = Napi::Function::New(env, corsairSetLedsColorsAsync);
   exports["CorsairGetLedPositions"] = Napi::Function::New(env, corsairGetLedPositions);
   exports["CorsairGetLedPositionsByDeviceIndex"] = Napi::Function::New(env, corsairGetLedPositionsByDeviceIndex);
-  //  exports["CorsairGetLedIdForKeyName"] = Napi::Function::New(env, corsairGetLedIdForKeyName);
+  exports["CorsairGetLedIdForKeyName"] = Napi::Function::New(env, corsairGetLedIdForKeyName);
 
   exports["CorsairRequestControl"] = Napi::Function::New(env, corsairRequestControl);
   exports["CorsairReleaseControl"] = Napi::Function::New(env, corsairReleaseControl);
   exports["CorsairSetLayerPriority"] = Napi::Function::New(env, corsairSetLayerPriority);
   //  exports["CorsairRegisterKeypressCallback"] = Napi::Function::New(env, corsairRegisterKeypressCallback);
+
   //  exports["CorsairGetBoolPropertyValue"] = Napi::Function::New(env, corsairGetBoolPropertyValue);
   //  exports["CorsairGetInt32PropertyValue"] = Napi::Function::New(env, corsairGetInt32PropertyValue);
   exports["CorsairGetDeviceProperty"] = Napi::Function::New(env, corsairGetDeviceProperty);
