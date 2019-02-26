@@ -3,16 +3,16 @@
   "author": "Tymur Mudzhyri",
   "license": "MIT",
   "private": true,
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "A Node.js native wrapper around CUE SDK",
   "main": "index.js",
   "scripts": {
     "install": "node-pre-gyp install --fallback-to-build",
     "build": "npm run rebuild:electron && node-pre-gyp build",
-    "release:node": "node-pre-gyp rebuild && node-pre-gyp package",
-    "rebuild:electron": "node-pre-gyp rebuild --runtime=electron --target=2.0.0 --dist-url=https://atom.io/download/electron",
-    "package:electron": "node-pre-gyp package --runtime=electron --target=2.0.0",
-    "release": "npm run rebuild:electron && npm run package:electron",
+    "release:node": "node-pre-gyp rebuild --target_arch=x64 --target_platform=win32 && node-pre-gyp package --target_arch=x64 --target_platform=win32",
+    "release:node-ia32": "node-pre-gyp rebuild --target_arch=ia32 --target_platform=win32 && node-pre-gyp package --target_arch=ia32 --target_platform=win32",
+    "release:electron": "node-pre-gyp rebuild --target_arch=x64 --target_platform=win32 --runtime=electron --target=2.0.0 --dist-url=https://atom.io/download/electron && node-pre-gyp package --target_arch=x64 --target_platform=win32 --runtime=electron --target=2.0.0",
+    "release:electron-ia32": "node-pre-gyp rebuild --target_arch=ia32 --target_platform=win32 --runtime=electron --target=2.0.0 --dist-url=https://atom.io/download/electron && node-pre-gyp package --target_arch=ia32 --target_platform=win32 --runtime=electron --target=2.0.0",
     "test": "node test"
   },
   "binary": {

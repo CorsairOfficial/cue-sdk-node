@@ -4,6 +4,26 @@
     [
       "OS=='win'",
       {
+        "conditions": [
+          [
+            "target_arch == 'ia32'",
+            {
+              "variables": {
+                "sdk_arch%": "",
+                "sdk_arch_path%": "i386"
+              }
+            }
+          ],
+          [
+            "target_arch == 'x64'",
+            {
+              "variables": {
+                "sdk_arch%": ".x64",
+                "sdk_arch_path%": "x64"
+              }
+            }
+          ]
+        ],
         "targets": [
           {
             "target_name": "<(module_name)",
@@ -26,40 +46,31 @@
             "dependencies": [
               "<!(node -p \"require('node-addon-api').gyp\")"
             ],
-            "product_dir": "<(module_path)",
-            "conditions": [
-              [
-                "target_arch == 'ia32'",
-                {
-                  "libraries": [
-                    "<(module_root_dir)/CUESDK/lib/i386/CUESDK_2015.lib"
-                  ],
-                  "copies": [
-                    {
-                      "destination": "<(module_path)",
-                      "files": [
-                        "<(module_root_dir)/CUESDK/redist/i386/CUESDK_2015.dll"
-                      ]
-                    }
-                  ]
-                }
-              ],
-              [
-                "target_arch == 'x64'",
-                {
-                  "libraries": [
-                    "<(module_root_dir)/CUESDK/lib/x64/CUESDK.x64_2015.lib"
-                  ],
-                  "copies": [
-                    {
-                      "destination": "<(module_path)",
-                      "files": [
-                        "<(module_root_dir)/CUESDK/redist/x64/CUESDK.x64_2015.dll"
-                      ]
-                    }
-                  ]
-                }
-              ]
+            "libraries": [
+              "<(module_root_dir)/CUESDK/lib/<(sdk_arch_path)/CUESDK<(sdk_arch)_2015.lib"
+            ],
+            "copies": [
+              {
+                "destination": "<(module_path)",
+                "files": [
+                  "<(module_root_dir)/CUESDK/redist/<(sdk_arch_path)/CUESDK<(sdk_arch)_2015.dll"
+                ]
+              }
+            ]
+          },
+          {
+            "target_name": "action_after_build",
+            "type": "none",
+            "dependencies": [
+              "<(module_name)"
+            ],
+            "copies": [
+              {
+                "files": [
+                  "<(PRODUCT_DIR)/<(module_name).node"
+                ],
+                "destination": "<(module_path)"
+              }
             ]
           }
         ]
