@@ -2,7 +2,6 @@
   "name": "cue-sdk",
   "author": "Tymur Mudzhyri",
   "license": "MIT",
-  "private": true,
   "version": "0.0.5",
   "description": "A Node.js native wrapper around CUE SDK",
   "repository": "https://github.com/intrueder/cue-sdk",
