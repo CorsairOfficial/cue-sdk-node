@@ -37,11 +37,15 @@ Napi::Number corsairGetLastError(const Napi::CallbackInfo &info)
   return Napi::Number::New(env, err);
 }
 
-Napi::Object corsairGetDeviceInfo(const Napi::CallbackInfo &info)
+Napi::Value corsairGetDeviceInfo(const Napi::CallbackInfo &info)
 {
   const auto env = info.Env();
   const auto deviceIndex = info[0].As<Napi::Number>().Int32Value();
   auto deviceInfo = CorsairGetDeviceInfo(deviceIndex);
+  if (!deviceInfo) {
+    return env.Undefined();
+  }
+
   auto result = Napi::Object::New(env);
   auto channels = Napi::Object::New(env);
 
@@ -270,6 +274,10 @@ Napi::Array corsairGetLedPositionsByDeviceIndex(const Napi::CallbackInfo &info)
   const auto env = info.Env();
   const auto deviceIndex = info[0].As<Napi::Number>().Int32Value();
   const auto result = CorsairGetLedPositionsByDeviceIndex(deviceIndex);
+  if (result == nullptr) {
+    return Napi::Array::New(env);
+  }
+
   auto arr = Napi::Array::New(env, result->numberOfLed);
   for (int i = 0; i < result->numberOfLed; ++i)
   {
