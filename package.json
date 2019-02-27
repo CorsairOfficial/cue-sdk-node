@@ -5,6 +5,7 @@
   "private": true,
   "version": "0.0.5",
   "description": "A Node.js native wrapper around CUE SDK",
+  "repository": "https://github.com/intrueder/cue-sdk",
   "main": "index.js",
   "scripts": {
     "install": "node-pre-gyp install --fallback-to-build",
