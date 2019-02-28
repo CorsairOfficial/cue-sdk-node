@@ -1,4 +1,6 @@
 #include <napi.h>
+
+#define CORSAIR_LIGHTING_SDK_DISABLE_DEPRECATION_WARNINGS
 #include <CUESDK.h>
 
 Napi::Number corsairGetDeviceCount(const Napi::CallbackInfo &info)
