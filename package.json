@@ -2,13 +2,13 @@
   "name": "cue-sdk",
   "author": "Tymur Mudzhyri",
   "license": "MIT",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A Node.js native wrapper around CUE SDK",
   "repository": "https://github.com/intrueder/cue-sdk",
   "main": "index.js",
   "scripts": {
     "install": "node-pre-gyp install --fallback-to-build",
-    "build": "npm run rebuild:electron && node-pre-gyp build",
+    "build": "npm run release:electron && node-pre-gyp build",
     "release:node": "node-pre-gyp rebuild --target_arch=x64 --target_platform=win32 && node-pre-gyp package --target_arch=x64 --target_platform=win32",
     "release:node-ia32": "node-pre-gyp rebuild --target_arch=ia32 --target_platform=win32 && node-pre-gyp package --target_arch=ia32 --target_platform=win32",
     "release:electron": "node-pre-gyp rebuild --target_arch=x64 --target_platform=win32 --runtime=electron --target=2.0.0 --dist-url=https://atom.io/download/electron && node-pre-gyp package --target_arch=x64 --target_platform=win32 --runtime=electron --target=2.0.0",
@@ -23,10 +23,10 @@
     "host": "https://github.com/intrueder/cue-sdk"
   },
   "dependencies": {
-    "node-addon-api": "1.6.2",
-    "node-pre-gyp": "0.12.0"
+    "node-addon-api": "1.6.3",
+    "node-pre-gyp": "0.13.0"
   },
   "devDependencies": {
-    "node-gyp": "3.8.0"
+    "node-gyp": "5.0.1"
   }
 }
