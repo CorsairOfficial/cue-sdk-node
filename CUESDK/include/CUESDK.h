@@ -24,6 +24,11 @@ extern "C"
 	" Consider using "#CUESDK_buffer_func" to fill buffer and "#CUESDK_send_func" to send data to CUE instead."\
 	" To disable deprecation, use CORSAIR_LIGHTING_SDK_DISABLE_DEPRECATION_WARNINGS")
 
+#define CORSAIR_LIGHTING_SDK_DEPRECATED_CORSAIRREGISTERKEYPRESSCALLBACK(CUESDK_sub_event_func, CUESDK_unsub_event_func) \
+	CORSAIR_LIGHTING_SDK_DEPRECATED("It is not recommended to use this function to register keypress callback."\
+	" Consider using "#CUESDK_sub_event_func" for subscribing to event and "#CUESDK_unsub_event_func" for unsubcribe from event."\
+	" To disable deprecation, use CORSAIR_LIGHTING_SDK_DISABLE_DEPRECATION_WARNINGS")
+
 #if defined(CORSAIR_LIGHTING_SDK_DISABLE_DEPRECATION_WARNINGS)
 #	undef CORSAIR_LIGHTING_SDK_DEPRECATED
 #	define CORSAIR_LIGHTING_SDK_DEPRECATED(message)
@@ -131,6 +136,17 @@ extern "C"
 		CDPI_Headset_EqualizerPreset      = 0x2000  // the number of active equalizer preset (integer, 1 - 5).
 	};
 
+	enum CorsairEventId
+	{
+		CEI_Invalid, //dummy value
+		CEI_DeviceConnectionStatusChangedEvent,
+		CEI_KeyEvent
+	};
+
+	const unsigned int CORSAIR_DEVICE_ID_MAX = 128;
+
+	typedef char CorsairDeviceId[CORSAIR_DEVICE_ID_MAX]; // defines a character array of length CORSAIR_DEVICE_ID_MAX to store device identifier string.
+
 	struct CorsairChannelDeviceInfo		// contains information about separate LED-device connected to the channel controlled by the DIY-device.
 	{
 		CorsairChannelDeviceType type;	// type of the LED-device.
@@ -152,13 +168,14 @@ extern "C"
 
 	struct CorsairDeviceInfo	// contains information about device.
 	{
-		CorsairDeviceType type;			// enum describing device type.
-		const char* model;				// null - terminated device model(like “K95RGB”).
+		CorsairDeviceType type;               // enum describing device type.
+		const char* model;                    // null - terminated device model(like “K95RGB”).
 		CorsairPhysicalLayout physicalLayout; // enum describing physical layout of the keyboard or mouse.
 		CorsairLogicalLayout logicalLayout;   // enum describing logical layout of the keyboard as set in CUE settings.
-		int capsMask;					// mask that describes device capabilities, formed as logical “or” of CorsairDeviceCaps enum values.
-		int ledsCount;					// number of controllable LEDs on the device.
-		CorsairChannelsInfo channels;	// structure that describes channels of the DIY-devices.
+		int capsMask;                         // mask that describes device capabilities, formed as logical “or” of CorsairDeviceCaps enum values.
+		int ledsCount;                        // number of controllable LEDs on the device.
+		CorsairChannelsInfo channels;         // structure that describes channels of the DIY-devices.
+		CorsairDeviceId deviceId;             // null-terminated string that contains unique device identifier that uniquely identifies device at least within session
 	};
 
 	struct CorsairLedPosition	// contains led id and position of led rectangle.Most of the keys are rectangular.In case if key is not rectangular(like Enter in ISO / UK layout) it returns the smallest rectangle that fully contains the key.
@@ -193,11 +210,36 @@ extern "C"
 		bool breakingChanges;			// boolean value that specifies if there were breaking changes between version of protocol implemented by server and client.
 	};
 
+	struct CorsairDeviceConnectionStatusChangedEvent // contains information about some device that is connected or disconnected. When user receives this event, it makes sense to reenumerate device list, because device indices may become invalid at this moment.
+	{
+		CorsairDeviceId deviceId; // null-terminated string that contains unique device identifier.
+		bool isConnected;         // true if connected, false if disconnected.
+	};
+
+	struct CorsairKeyEvent // contains information about device where G or M key was pressed/released and the key itself.
+	{
+		CorsairDeviceId deviceId; // null-terminated string that contains unique device identifier.
+		CorsairKeyId keyId;       // G or M key that was pressed/released.
+		bool isPressed;           // true if pressed, false if released.
+	};
+
+	struct CorsairEvent // contains information about event id and event data.
+	{
+		CorsairEventId id; // event identifier.
+		union
+		{
+			const CorsairDeviceConnectionStatusChangedEvent *deviceConnectionStatusChangedEvent; // when id == CEI_DeviceConnectionStatusChangedEvent contains valid pointer to structure with information about connected or disconnected device.
+			const CorsairKeyEvent *keyEvent;                                                     // when id == CEI_KeyEvent contains valid pointer to structure with information about pressed or released G or M button and device where this event happened.
+		};
+	};
+
+	typedef void(*CorsairEventHandler)(void *context, const CorsairEvent *event); // defines a callback that will be called by SDK to notify user about events.
+
 	// set specified leds to some colors. The color is retained until changed by successive calls. This function does not take logical layout into account.
 	CORSAIR_LIGHTING_SDK_DEPRECATED_SETLEDSCOLORS_WITH_DIY(CorsairSetLedsColorsBufferByDeviceIndex, CorsairSetLedsColorsFlushBuffer)
 	CORSAIR_LIGHTING_SDK_EXPORT bool CorsairSetLedsColors(int size, CorsairLedColor* ledsColors);
 
-	// set specified LEDs to some colors. This function set LEDs colors in the buffer which is written to the devices via CorsairSedLedsColorsFlushBuffer or CorsairSedLedsColorsFlushBufferAsync.
+	// set specified LEDs to some colors. This function set LEDs colors in the buffer which is written to the devices via CorsairSetLedsColorsFlushBuffer or CorsairSetLedsColorsFlushBufferAsync.
 	CORSAIR_LIGHTING_SDK_EXPORT bool CorsairSetLedsColorsBufferByDeviceIndex(int deviceIndex, int size, CorsairLedColor* ledsColors);
 
 	// writes to the devices LEDs colors buffer which is previously filled by the CorsairSetLedsColorsBufferByDeviceIndex function.
@@ -247,6 +289,7 @@ extern "C"
 	CORSAIR_LIGHTING_SDK_EXPORT bool CorsairSetLayerPriority(int priority);
 
 	// registers a callback that will be called by SDK when some of G or M keys are pressed or released.
+	CORSAIR_LIGHTING_SDK_DEPRECATED_CORSAIRREGISTERKEYPRESSCALLBACK(CorsairSubscribeForEvents, CorsairUnsubscribeFromEvents)
 	CORSAIR_LIGHTING_SDK_EXPORT bool CorsairRegisterKeypressCallback(void (*CallbackType)(void *context, CorsairKeyId keyId, bool pressed), void *context);
 
 	// reads boolean property value for device at provided index.
@@ -254,6 +297,12 @@ extern "C"
 
 	// reads integer property value for device at provided index.
 	CORSAIR_LIGHTING_SDK_EXPORT bool CorsairGetInt32PropertyValue(int deviceIndex, CorsairDevicePropertyId propertyId, int *propertyValue);
+
+	// registers a callback that will be called by SDK when some event happened.
+	CORSAIR_LIGHTING_SDK_EXPORT bool CorsairSubscribeForEvents(CorsairEventHandler onEvent, void *context);
+
+	// unregisters callback previously registered by CorsairSubscribeForEvents call.
+	CORSAIR_LIGHTING_SDK_EXPORT bool CorsairUnsubscribeFromEvents();
 
 #ifdef __cplusplus
 } //exten "C"
