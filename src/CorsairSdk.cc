@@ -352,6 +352,13 @@ Napi::Value corsairGetDeviceProperty(const Napi::CallbackInfo &info)
   return env.Undefined();
 }
 
+Napi::Boolean corsairUnsubscribeFromEvents(const Napi::CallbackInfo &info)
+{
+  const auto env = info.Env();
+  const bool result = CorsairUnsubscribeFromEvents();
+  return Napi::Boolean::New(env, result);
+}
+
 Napi::Object Init(Napi::Env env, Napi::Object exports)
 {
   exports["CorsairGetDeviceCount"] = Napi::Function::New(env, corsairGetDeviceCount);
@@ -379,6 +386,9 @@ Napi::Object Init(Napi::Env env, Napi::Object exports)
   //  exports["CorsairGetBoolPropertyValue"] = Napi::Function::New(env, corsairGetBoolPropertyValue);
   //  exports["CorsairGetInt32PropertyValue"] = Napi::Function::New(env, corsairGetInt32PropertyValue);
   exports["CorsairGetDeviceProperty"] = Napi::Function::New(env, corsairGetDeviceProperty);
+
+  // exports["CorsairSubscribeForEvents"] = Napi::Function::New(env, corsairSubscribeForEvents);
+  exports["CorsairUnsubscribeFromEvents"] = Napi::Function::New(env, corsairUnsubscribeFromEvents);
 
   return exports;
 }
