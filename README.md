@@ -129,3 +129,8 @@ Returns `Object[]`: array of led positions for specified device. Can be empty if
 
 * `deviceIndex` - zero based device index
 * `propertyId` - id of property, `sdk.CorsairDevicePropertyId`'s member
+
+### `CorsairSubscribeForEvents(onEvent)`
+not implemented
+
+### `CorsairUnsubscribeFromEvents()`
