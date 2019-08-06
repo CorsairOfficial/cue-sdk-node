@@ -8,11 +8,11 @@
   "main": "index.js",
   "scripts": {
     "install": "node-pre-gyp install --fallback-to-build",
-    "build": "npm run release:electron && node-pre-gyp build",
+    "build": "npm run release:node",
     "release:node": "node-pre-gyp rebuild --target_arch=x64 --target_platform=win32 && node-pre-gyp package --target_arch=x64 --target_platform=win32",
     "release:node-ia32": "node-pre-gyp rebuild --target_arch=ia32 --target_platform=win32 && node-pre-gyp package --target_arch=ia32 --target_platform=win32",
-    "release:electron": "node-pre-gyp rebuild --target_arch=x64 --target_platform=win32 --runtime=electron --target=2.0.0 --dist-url=https://atom.io/download/electron && node-pre-gyp package --target_arch=x64 --target_platform=win32 --runtime=electron --target=2.0.0",
-    "release:electron-ia32": "node-pre-gyp rebuild --target_arch=ia32 --target_platform=win32 --runtime=electron --target=2.0.0 --dist-url=https://atom.io/download/electron && node-pre-gyp package --target_arch=ia32 --target_platform=win32 --runtime=electron --target=2.0.0",
+    "release:electron": "node-pre-gyp rebuild --target_arch=x64 --target_platform=win32 --runtime=electron --target=6.0.0 --dist-url=https://atom.io/download/electron && node-pre-gyp package --target_arch=x64 --target_platform=win32 --runtime=electron --target=6.0.0",
+    "release:electron-ia32": "node-pre-gyp rebuild --target_arch=ia32 --target_platform=win32 --runtime=electron --target=6.0.0 --dist-url=https://atom.io/download/electron && node-pre-gyp package --target_arch=ia32 --target_platform=win32 --runtime=electron --target=6.0.0",
     "test": "node test"
   },
   "binary": {
@@ -23,10 +23,10 @@
     "host": "https://github.com/intrueder/cue-sdk"
   },
   "dependencies": {
-    "node-addon-api": "1.6.3",
+    "node-addon-api": "1.7.1",
     "node-pre-gyp": "0.13.0"
   },
   "devDependencies": {
-    "node-gyp": "5.0.1"
+    "node-gyp": "5.0.3"
   }
 }
