@@ -211,20 +211,42 @@ Napi::Boolean corsairSetLedsColorsFlushBuffer(const Napi::CallbackInfo &info)
   return Napi::Boolean::New(env, result);
 }
 
+Napi::ThreadSafeFunction tsfnCorsairSetLedsColorsFlushBufferAsync;
 Napi::Boolean corsairSetLedsColorsFlushBufferAsync(const Napi::CallbackInfo &info)
 {
   const auto env = info.Env();
-  const auto callback = info[0].As<Napi::Function>();
 
-  // TODO: add support for callbacks if https://github.com/nodejs/node-addon-api/issues/312 is ready
-  const bool result = CorsairSetLedsColorsFlushBufferAsync(nullptr, nullptr);
+  if (info.Length() < 1 || !info[0].IsFunction()) {
+    const bool result = CorsairSetLedsColorsFlushBufferAsync(nullptr, nullptr);
+    return Napi::Boolean::New(env, result);
+  }
+
+  const auto jsCallback = info[0].As<Napi::Function>();
+  tsfnCorsairSetLedsColorsFlushBufferAsync = Napi::ThreadSafeFunction::New(env, jsCallback, "CorsairSetLedsColorsFlushBufferAsync", 0, 1);
+  auto cCallback = [](void *context, bool res, CorsairError err) {
+    auto callback = [](Napi::Env env, Napi::Function f, int *value) {
+      f.Call({Napi::Number::New(env, *value)});
+      delete value;
+    };
+    int *value = new int(err);
+    tsfnCorsairSetLedsColorsFlushBufferAsync.BlockingCall(value, callback);
+    tsfnCorsairSetLedsColorsFlushBufferAsync.Release();
+  };
+
+  const bool result = CorsairSetLedsColorsFlushBufferAsync(cCallback, nullptr);
+  if (!result)
+  {
+    tsfnCorsairSetLedsColorsFlushBufferAsync.Release();
+  }
 
   return Napi::Boolean::New(env, result);
 }
 
+Napi::ThreadSafeFunction tsfnCorsairSetLedsColorsAsync;
 Napi::Boolean corsairSetLedsColorsAsync(const Napi::CallbackInfo &info)
 {
   const auto env = info.Env();
+
   auto colors = info[0].As<Napi::Array>();
   auto len = colors.Length();
   CorsairLedColor *ledsColors = new CorsairLedColor[len]();
@@ -239,8 +261,28 @@ Napi::Boolean corsairSetLedsColorsAsync(const Napi::CallbackInfo &info)
     ledsColors[i] = led;
   }
 
-  // TODO: add support for callbacks if https://github.com/nodejs/node-addon-api/issues/312 is ready
-  const auto result = CorsairSetLedsColorsAsync(len, ledsColors, nullptr, nullptr);
+  if (info.Length() < 2 || !info[1].IsFunction()) {
+    const bool result = CorsairSetLedsColorsAsync(len, ledsColors, nullptr, nullptr);
+    return Napi::Boolean::New(env, result);
+  }
+
+  const auto jsCallback = info[1].As<Napi::Function>();
+  tsfnCorsairSetLedsColorsAsync = Napi::ThreadSafeFunction::New(env, jsCallback, "CorsairSetLedsColorsAsync", 0, 1);
+  auto cCallback = [](void *context, bool res, CorsairError err) {
+    auto callback = [](Napi::Env env, Napi::Function f, int *value) {
+      f.Call({Napi::Number::New(env, *value)});
+      delete value;
+    };
+    int *value = new int(err);
+    tsfnCorsairSetLedsColorsAsync.BlockingCall(value, callback);
+    tsfnCorsairSetLedsColorsAsync.Release();
+  };
+
+  const bool result = CorsairSetLedsColorsAsync(len, ledsColors, cCallback, nullptr);
+  if (!result)
+  {
+    tsfnCorsairSetLedsColorsAsync.Release();
+  }
 
   delete [] ledsColors;
 
@@ -352,10 +394,90 @@ Napi::Value corsairGetDeviceProperty(const Napi::CallbackInfo &info)
   return env.Undefined();
 }
 
+Napi::ThreadSafeFunction *tsfnCorsairSubscribeForEvents;
+Napi::Boolean corsairSubscribeForEvents(const Napi::CallbackInfo &info)
+{
+  const auto env = info.Env();
+
+  if (info.Length() < 1 || !info[0].IsFunction())
+  {
+    const bool result = CorsairSubscribeForEvents(nullptr, nullptr);
+    return Napi::Boolean::New(env, result);
+  }
+
+  const auto jsCallback = info[0].As<Napi::Function>();
+
+  if (tsfnCorsairSubscribeForEvents != nullptr)
+  {
+    tsfnCorsairSubscribeForEvents->Abort();
+    tsfnCorsairSubscribeForEvents = nullptr;
+  }
+  
+  tsfnCorsairSubscribeForEvents = new Napi::ThreadSafeFunction();
+  *tsfnCorsairSubscribeForEvents = Napi::ThreadSafeFunction::New(env, jsCallback, "CorsairSubscribeForEvents", 0, 1);
+
+  auto cCallback = [](void *context, const CorsairEvent *event) {
+    auto callback = [](Napi::Env env, Napi::Function f, CorsairEvent *value) {
+      auto evt = Napi::Object::New(env);
+      if (value->id == CEI_KeyEvent)
+      {
+        evt["id"] = (value->keyEvent->isPressed ? std::string("macrokeydown") : std::string("macrokeyup"));
+        evt["deviceId"] = std::string(value->keyEvent->deviceId);
+        evt["keyId"] = (int)value->keyEvent->keyId;
+      }
+      else if (value->id == CEI_DeviceConnectionStatusChangedEvent)
+      {
+        evt["id"] = (value->deviceConnectionStatusChangedEvent->isConnected ? std::string("deviceconnect") : std::string("devicedisconnect"));
+        evt["deviceId"] = std::string(value->deviceConnectionStatusChangedEvent->deviceId);
+      }
+      else
+      {
+        evt["id"] = env.Null();
+      }
+      delete value;
+      f.Call({evt});
+    };
+
+    CorsairEvent* ev = new CorsairEvent();
+    ev->id = event->id;
+    if (ev->id == CEI_KeyEvent)
+    {
+      auto ke = new CorsairKeyEvent();
+      ke->keyId = event->keyEvent->keyId;
+      ke->isPressed = event->keyEvent->isPressed;
+      strcpy_s<CORSAIR_DEVICE_ID_MAX>(ke->deviceId, event->keyEvent->deviceId);
+      ev->keyEvent = ke;
+    }
+    else if (ev->id == CEI_DeviceConnectionStatusChangedEvent)
+    {
+      auto de = new CorsairDeviceConnectionStatusChangedEvent();
+      de->isConnected = event->deviceConnectionStatusChangedEvent->isConnected;
+      strcpy_s<CORSAIR_DEVICE_ID_MAX>(de->deviceId, event->deviceConnectionStatusChangedEvent->deviceId);
+      ev->deviceConnectionStatusChangedEvent = de;
+    }
+
+    tsfnCorsairSubscribeForEvents->BlockingCall(ev, callback);
+  };
+
+  const bool result = CorsairSubscribeForEvents(cCallback, nullptr);
+  if (!result)
+  {
+    tsfnCorsairSubscribeForEvents->Release();
+    tsfnCorsairSubscribeForEvents = nullptr;
+  }
+
+  return Napi::Boolean::New(env, result);
+}
+
 Napi::Boolean corsairUnsubscribeFromEvents(const Napi::CallbackInfo &info)
 {
   const auto env = info.Env();
   const bool result = CorsairUnsubscribeFromEvents();
+  if (tsfnCorsairSubscribeForEvents != nullptr) {
+    tsfnCorsairSubscribeForEvents->Abort();
+    tsfnCorsairSubscribeForEvents = nullptr;
+  }
+
   return Napi::Boolean::New(env, result);
 }
 
@@ -387,7 +509,7 @@ Napi::Object Init(Napi::Env env, Napi::Object exports)
   //  exports["CorsairGetInt32PropertyValue"] = Napi::Function::New(env, corsairGetInt32PropertyValue);
   exports["CorsairGetDeviceProperty"] = Napi::Function::New(env, corsairGetDeviceProperty);
 
-  // exports["CorsairSubscribeForEvents"] = Napi::Function::New(env, corsairSubscribeForEvents);
+  exports["CorsairSubscribeForEvents"] = Napi::Function::New(env, corsairSubscribeForEvents);
   exports["CorsairUnsubscribeFromEvents"] = Napi::Function::New(env, corsairUnsubscribeFromEvents);
 
   return exports;
