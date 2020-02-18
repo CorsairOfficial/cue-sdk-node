@@ -2,7 +2,11 @@ Node.js native wrapper around CUE SDK
 =====================================
 
 This wrapper can be used in node and electron apps.
-It uses [node-pre-gyp](https://www.npmjs.com/package/node-pre-gyp) and is prebuilt for some environments (see [Releases](https://github.com/intrueder/cue-sdk/releases))
+It uses [prebuildify](https://github.com/prebuild/prebuildify) and is prebuilt for some runtime environments:
+
+**Node**: 8.16.0, 10.16.0, 11.8.0, 12.0.0
+
+**Electron**: 6.0.0, 7.0.0, 8.0.0
 
 The API is almost the same as in CUE SDK itself.
 

@@ -1,20 +1,9 @@
 {
+  "variables": {
+    "module_name%": "node.abi72",
+    "prebuilds_path%": "<(module_root_dir)/prebuilds/win32-<(target_arch)"
+  },
   "targets": [
-    {
-      "target_name": "action_after_build",
-      "type": "none",
-      "dependencies": [
-        "<(module_name)"
-      ],
-      "copies": [
-        {
-          "files": [
-            "<(PRODUCT_DIR)/<(module_name).node"
-          ],
-          "destination": "<(module_path)"
-        }
-      ]
-    },
     {
       "target_name": "<(module_name)",
       "sources": [
@@ -65,7 +54,13 @@
             ],
             "copies": [
               {
-                "destination": "<(module_path)",
+                "destination": "<(prebuilds_path)",
+                "files": [
+                  "<(module_root_dir)/CUESDK/redist/<(sdk_arch_path)/CUESDK<(sdk_arch)_2015.dll"
+                ]
+              },
+              {
+                "destination": "<(PRODUCT_DIR)",
                 "files": [
                   "<(module_root_dir)/CUESDK/redist/<(sdk_arch_path)/CUESDK<(sdk_arch)_2015.dll"
                 ]

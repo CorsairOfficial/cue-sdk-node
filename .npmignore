@@ -14,8 +14,8 @@
 pids
 logs
 results
-lib/binding
 npm-debug.log
 node_modules
 build
 test.js
+CUESDK
