@@ -8,11 +8,12 @@ It uses [prebuildify](https://github.com/prebuild/prebuildify) and is prebuilt f
 
 **Electron**: 6.0.0, 7.0.0, 8.0.0
 
-The API is almost the same as in CUE SDK itself.
+The API is almost the same as in [CUE SDK](https://github.com/CorsairOfficial/cue-sdk) itself.
 
 ## Prerequisites
 
 - Microsoft C Runtime Library (v140) - required by `CUESDK*.dll`
+- Node have to have N-API v4 (see [N-API Version Matrix](https://nodejs.org/api/n-api.html#n_api_n_api_version_matrix))
 
 ## Installation
 
