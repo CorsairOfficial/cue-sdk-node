@@ -13,9 +13,9 @@
   },
   "dependencies": {
     "node-addon-api": "2.0.0",
-    "node-gyp-build": "4.2.0"
+    "node-gyp-build": "4.2.1"
   },
   "devDependencies": {
-    "node-gyp": "5.1.0"
+    "node-gyp": "6.1.0"
   }
 }
