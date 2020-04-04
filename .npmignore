@@ -19,3 +19,5 @@ node_modules
 build
 test.js
 CUESDK
+binding.gyp
+*.cc
