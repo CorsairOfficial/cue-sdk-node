@@ -8,7 +8,9 @@
   "main": "index.js",
   "scripts": {
     "install": "node-gyp-build",
-    "build-all": "prebuildify --strip -t electron@6.0.0 -t electron@7.0.0 -t electron@8.0.0 -t 8.16.0 -t 10.16.0 -t 11.8.0 -t 12.0.0",
+    "build-x64": "prebuildify --napi --arch x64",
+    "build-ia32": "prebuildify --napi --arch ia32",
+    "build-all": "npm run build-ia32 && npm run build-x64",
     "test": "node test"
   },
   "dependencies": {
