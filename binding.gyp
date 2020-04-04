@@ -1,6 +1,6 @@
 {
   "variables": {
-    "module_name%": "node.abi72",
+    "module_name%": "cuesdk",
     "prebuilds_path%": "<(module_root_dir)/prebuilds/win32-<(target_arch)"
   },
   "targets": [
@@ -50,19 +50,13 @@
               ]
             ],
             "libraries": [
-              "<(module_root_dir)/CUESDK/lib/<(sdk_arch_path)/CUESDK<(sdk_arch)_2015.lib"
+              "<(module_root_dir)/CUESDK/lib/<(sdk_arch_path)/CUESDK<(sdk_arch)_2017.lib"
             ],
             "copies": [
               {
                 "destination": "<(prebuilds_path)",
                 "files": [
-                  "<(module_root_dir)/CUESDK/redist/<(sdk_arch_path)/CUESDK<(sdk_arch)_2015.dll"
-                ]
-              },
-              {
-                "destination": "<(PRODUCT_DIR)",
-                "files": [
-                  "<(module_root_dir)/CUESDK/redist/<(sdk_arch_path)/CUESDK<(sdk_arch)_2015.dll"
+                  "<(module_root_dir)/CUESDK/redist/<(sdk_arch_path)/CUESDK<(sdk_arch)_2017.dll"
                 ]
               }
             ]
