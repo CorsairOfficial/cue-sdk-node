@@ -19,7 +19,7 @@ jobs:
         with:
           node-version: 14
       - run: npm ci
-      - run: npm prebuild
+      - run: npm run prebuild
       - name: Publish if version has been updated
         uses: intrueder/npm-publish@master
         with: # All of theses inputs are optional
