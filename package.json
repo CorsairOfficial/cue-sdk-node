@@ -9,9 +9,6 @@
   "scripts": {
     "install": "node-gyp-build",
     "prebuild": "prebuildify --napi --arch ia32 && prebuildify --napi --arch x64",
-    "build-x64": "prebuildify --napi --arch x64",
-    "build-ia32": "prebuildify --napi --arch ia32",
-    "build-all": "npm run build-ia32 && npm run build-x64",
     "test": "node test"
   },
   "dependencies": {
