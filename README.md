@@ -4,7 +4,7 @@ Node.js native wrapper around CUE SDK
 This wrapper can be used in node and electron apps.
 It uses [prebuildify](https://github.com/prebuild/prebuildify) and is prebuilt for some runtime environments:
 
-**Node**: 8.16.0, 10.16.0, 11.8.0, 12.0.0
+**Node**: 10.16.0, 11.8.0, 12.x, 13.x, 14.x
 
 **Electron**: 6.0.0, 7.0.0, 8.0.0
 
@@ -12,7 +12,9 @@ The API is almost the same as in [CUE SDK](https://github.com/CorsairOfficial/cu
 
 ## Prerequisites
 
-- Microsoft C Runtime Library (v140) - required by `CUESDK*.dll`
+- Microsoft Visual C++ Redistributable for Visual Studio 2017.
+  - x86 https://aka.ms/vs/15/release/VC_redist.x86.exe
+  - x64 https://aka.ms/vs/15/release/VC_redist.x64.exe 
 - Node have to have N-API v4 (see [N-API Version Matrix](https://nodejs.org/api/n-api.html#n_api_n_api_version_matrix))
 
 ## Installation

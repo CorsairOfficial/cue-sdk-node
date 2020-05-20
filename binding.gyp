@@ -13,9 +13,6 @@
         "<!@(node -p \"require('node-addon-api').include\")",
         "<(module_root_dir)/CUESDK/include"
       ],
-      "dependencies": [
-        "<!(node -p \"require('node-addon-api').gyp\")"
-      ],
       "cflags!": [
         "-fno-exceptions"
       ],

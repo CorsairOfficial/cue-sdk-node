@@ -8,16 +8,18 @@
   "main": "index.js",
   "scripts": {
     "install": "node-gyp-build",
+    "prebuild": "prebuildify --napi --arch ia32 && prebuildify --napi --arch x64",
     "build-x64": "prebuildify --napi --arch x64",
     "build-ia32": "prebuildify --napi --arch ia32",
     "build-all": "npm run build-ia32 && npm run build-x64",
     "test": "node test"
   },
   "dependencies": {
-    "node-addon-api": "2.0.0",
-    "node-gyp-build": "4.2.1"
+    "node-addon-api": "3.0.0",
+    "node-gyp-build": "4.2.2"
   },
   "devDependencies": {
-    "node-gyp": "6.1.0"
+    "node-gyp": "6.1.0",
+    "prebuildify": "4.0.0"
   }
 }
