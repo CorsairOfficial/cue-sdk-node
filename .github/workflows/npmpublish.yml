@@ -1,12 +1,9 @@
-# This workflow will run tests using node and then publish a package to GitHub Packages when a release is created
-# For more information see: https://help.github.com/actions/language-and-framework-guides/publishing-nodejs-packages
-
 name: npm-publish
 
 on:
   push:
     branches:
-      - master # Change this to your default branch
+      - master
 
 jobs:
   npm-publish:
@@ -15,16 +12,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
       - name: Set up Node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@master
         with:
-          node-version: 14
-          registry-url: "https://registry.npmjs.org"
+          node-version: '14.x'
       - run: npm ci
       - run: npm run prebuild
       - name: Publish if version has been updated
         uses: intrueder/npm-publish@master
-        with: # All of theses inputs are optional
+        with:
           commit_message_pattern: "^Release (\\S+)"
-        env: # More info about the environment variables in the README
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Leave this as is, it's automatically generated
-          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }} # You need to set this in your repo settings
+          npm_token: ${{secrets.NPM_AUTH_TOKEN}}
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
