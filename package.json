@@ -4,7 +4,7 @@
   "license": "MIT",
   "version": "1.4.0",
   "description": "A Node.js native wrapper around CUE SDK",
-  "repository": "https://github.com/intrueder/cue-sdk-node",
+  "repository": "https://github.com/CorsairOfficial/cue-sdk-node",
   "main": "index.js",
   "scripts": {
     "install": "node-gyp-build",
