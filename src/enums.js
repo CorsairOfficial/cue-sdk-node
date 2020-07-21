@@ -8,7 +8,9 @@ const CorsairDeviceType = {
   CDT_CommanderPro: 6,
   CDT_LightingNodePro: 7,
   CDT_MemoryModule: 8,
-  CDT_Cooler: 9
+  CDT_Cooler: 9,
+  CDT_Motherboard: 10,
+  CDT_GraphicsCard: 11
 };
 
 const CorsairPhysicalLayout = {
@@ -106,7 +108,8 @@ const CorsairChannelDeviceType = {
   CCDT_ML_Fan: 4,
   CCDT_Strip: 5,
   CCDT_DAP: 6,
-  CCDT_Pump: 7
+  CCDT_Pump: 7,
+  CCDT_QL_Fan: 8
 };
 
 const CorsairDevicePropertyType = {
