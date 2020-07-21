@@ -74,5 +74,5 @@ for (let i = 0; i < n; ++i) {
 
 # Links
 
-- API reference: https://github.com/intrueder/cue-sdk/blob/master/api-reference.md
-- Code examples: https://github.com/intrueder/cue-sdk/tree/master/example
+- API reference: https://github.com/CorsairOfficial/cue-sdk-node/blob/master/api-reference.md
+- Code examples: https://github.com/CorsairOfficial/cue-sdk-node/tree/master/example
