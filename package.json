@@ -1,8 +1,8 @@
 {
   "name": "cue-sdk",
-  "author": "Tymur Mudzhyri",
+  "author": "Corsair Memory, Inc.",
   "license": "MIT",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "A Node.js native wrapper around CUE SDK",
   "repository": "https://github.com/CorsairOfficial/cue-sdk-node",
   "main": "index.js",
