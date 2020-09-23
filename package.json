@@ -12,11 +12,11 @@
     "test": "node test"
   },
   "dependencies": {
-    "node-addon-api": "3.0.0",
+    "node-addon-api": "3.0.2",
     "node-gyp-build": "4.2.3"
   },
   "devDependencies": {
-    "node-gyp": "7.0.0",
-    "prebuildify": "4.0.0"
+    "node-gyp": "7.1.0",
+    "prebuildify": "4.1.0"
   }
 }
