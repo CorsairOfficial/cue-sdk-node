@@ -11,7 +11,7 @@ const CorsairDeviceType = {
   CDT_Cooler: 9,
   CDT_Motherboard: 10,
   CDT_GraphicsCard: 11
-};
+}
 
 const CorsairPhysicalLayout = {
   CPL_Invalid: 0,
@@ -26,7 +26,7 @@ const CorsairPhysicalLayout = {
   CPL_Zones2: 7,
   CPL_Zones3: 8,
   CPL_Zones4: 9
-};
+}
 
 const CorsairLogicalLayout = {
   CLL_Invalid: 0,
@@ -48,7 +48,7 @@ const CorsairLogicalLayout = {
   CLL_KR: 16,
   CLL_TW: 17,
   CLL_MEX: 18
-};
+}
 
 const CorsairLogicalLayoutString = [
   'CLL_Invalid',
@@ -70,17 +70,17 @@ const CorsairLogicalLayoutString = [
   'CLL_KR',
   'CLL_TW',
   'CLL_MEX'
-];
+]
 
 const CorsairDeviceCaps = {
   CDC_None: 0x0000,
   CDC_Lighting: 0x0001,
   CDC_PropertyLookup: 0x0002
-};
+}
 
 const CorsairAccessMode = {
   CAM_ExclusiveLightingControl: 0
-};
+}
 
 const CorsairError = {
   CE_Success: 0,
@@ -89,7 +89,7 @@ const CorsairError = {
   CE_ProtocolHandshakeMissing: 3,
   CE_IncompatibleProtocol: 4,
   CE_InvalidArguments: 5
-};
+}
 
 const CorsairErrorString = [
   'CE_Success',
@@ -98,7 +98,7 @@ const CorsairErrorString = [
   'CE_ProtocolHandshakeMissing',
   'CE_IncompatibleProtocol',
   'CE_InvalidArguments'
-];
+]
 
 const CorsairChannelDeviceType = {
   CCDT_Invalid: 0,
@@ -109,20 +109,22 @@ const CorsairChannelDeviceType = {
   CCDT_Strip: 5,
   CCDT_DAP: 6,
   CCDT_Pump: 7,
-  CCDT_QL_Fan: 8
-};
+  CCDT_QL_Fan: 8,
+  CCDT_WaterBlock: 9,
+  CCDT_SPPRO_Fan: 10
+}
 
 const CorsairDevicePropertyType = {
   CDPT_Boolean: 0x1000,
   CDPT_Int32: 0x2000
-};
+}
 
 const CorsairDevicePropertyId = {
   CDPI_Headset_MicEnabled: 0x1000,
   CDPI_Headset_SurroundSoundEnabled: 0x1001,
   CDPI_Headset_SidetoneEnabled: 0x1002,
   CDPI_Headset_EqualizerPreset: 0x2000
-};
+}
 
 module.exports = {
   CorsairDeviceType,
@@ -136,4 +138,4 @@ module.exports = {
   CorsairChannelDeviceType,
   CorsairDevicePropertyType,
   CorsairDevicePropertyId
-};
+}
