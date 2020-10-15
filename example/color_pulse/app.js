@@ -22,7 +22,7 @@ function getAvailableLeds() {
   const deviceCount = sdk.CorsairGetDeviceCount()
   for (let di = 0; di < deviceCount; ++di) {
     const ledPositions = sdk.CorsairGetLedPositionsByDeviceIndex(di)
-    leds.push(ledPositions.map((p) => ({ ledId: p.ledId, r: 0, g: 0, b: 0 })))
+    leds.push(ledPositions.map(p => ({ ledId: p.ledId, r: 0, g: 0, b: 0 })))
   }
 
   return leds
@@ -33,7 +33,7 @@ function performPulseEffect(allLeds, x) {
   let val = ~~((1 - (x - 1) * (x - 1)) * 255)
   for (let di = 0; di < cnt; ++di) {
     const device_leds = allLeds[di]
-    device_leds.forEach((led) => {
+    device_leds.forEach(led => {
       led.r = 0
       led.g = val
       led.b = 0
@@ -60,7 +60,7 @@ function main() {
 
   console.log(
     'Working... Use "+" or "-" to increase or decrease speed.\n' +
-      'Press "q" to close program...',
+      'Press "q" to close program...'
   )
 
   function loop(leds, waveDuration, x) {
@@ -82,7 +82,7 @@ function main() {
       TIME_PER_FRAME,
       leds,
       waveDuration,
-      (x + TIME_PER_FRAME / waveDuration) % 2,
+      (x + TIME_PER_FRAME / waveDuration) % 2
     )
   }
 
