@@ -445,14 +445,14 @@ Napi::Boolean corsairSubscribeForEvents(const Napi::CallbackInfo &info)
       auto ke = new CorsairKeyEvent();
       ke->keyId = event->keyEvent->keyId;
       ke->isPressed = event->keyEvent->isPressed;
-      strcpy_s<CORSAIR_DEVICE_ID_MAX>(ke->deviceId, event->keyEvent->deviceId);
+      strncpy(ke->deviceId, event->keyEvent->deviceId, CORSAIR_DEVICE_ID_MAX);
       ev->keyEvent = ke;
     }
     else if (ev->id == CEI_DeviceConnectionStatusChangedEvent)
     {
       auto de = new CorsairDeviceConnectionStatusChangedEvent();
       de->isConnected = event->deviceConnectionStatusChangedEvent->isConnected;
-      strcpy_s<CORSAIR_DEVICE_ID_MAX>(de->deviceId, event->deviceConnectionStatusChangedEvent->deviceId);
+      strncpy(de->deviceId, event->deviceConnectionStatusChangedEvent->deviceId, CORSAIR_DEVICE_ID_MAX);
       ev->deviceConnectionStatusChangedEvent = de;
     }
 
