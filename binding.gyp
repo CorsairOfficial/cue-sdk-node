@@ -6,22 +6,14 @@
   "targets": [
     {
       "target_name": "<(module_name)",
-      "sources": [
-        "src/CorsairSdk.cc"
-      ],
+      "sources": ["src/CorsairSdk.cc"],
       "include_dirs": [
         "<!@(node -p \"require('node-addon-api').include\")",
         "<(module_root_dir)/CUESDK/include"
       ],
-      "cflags!": [
-        "-fno-exceptions"
-      ],
-      "cflags_cc!": [
-        "-fno-exceptions"
-      ],
-      "defines": [
-        "NAPI_DISABLE_CPP_EXCEPTIONS"
-      ],
+      "cflags!": ["-fno-exceptions"],
+      "cflags_cc!": ["-fno-exceptions"],
+      "defines": ["NAPI_DISABLE_CPP_EXCEPTIONS"],
       "conditions": [
         [
           "OS=='win'",
@@ -57,6 +49,14 @@
                 ]
               }
             ]
+          }
+        ],
+        [
+          "OS=='mac'",
+          {
+            "link_settings": {
+              "libraries": ["-F/Library/Frameworks", "-framework CUESDK"]
+            }
           }
         ]
       ]
