@@ -1,6 +1,7 @@
 .DS_Store
 .idea
 .vscode
+.github
 
 *.seed
 *.log
@@ -17,7 +18,10 @@ results
 npm-debug.log
 node_modules
 build
+example
 test.js
-CUESDK
 binding.gyp
-*.cc
+.prettierrc
+*.md
+CUESDK/lib
+CUESDK/redist
