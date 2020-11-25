@@ -9,6 +9,7 @@
   "scripts": {
     "install": "node-gyp-build",
     "prebuild": "prebuildify --napi --arch ia32 && prebuildify --napi --arch x64",
+    "prebuild-mac": "prebuildify --napi --arch x64",
     "test": "node test"
   },
   "dependencies": {
