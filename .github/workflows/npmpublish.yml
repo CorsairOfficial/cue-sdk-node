@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - macos_support
 
 jobs:
   npm-publish:
