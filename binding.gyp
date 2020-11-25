@@ -1,19 +1,28 @@
 {
   "variables": {
     "module_name%": "cuesdk",
-    "prebuilds_path%": "<(module_root_dir)/prebuilds/win32-<(target_arch)"
+    "win_prebuild_path%": "<(module_root_dir)/prebuilds/win32-<(target_arch)",
+    "mac_prebuild_path%": "<(module_root_dir)/prebuilds/darwin-<(target_arch)"
   },
   "targets": [
     {
       "target_name": "<(module_name)",
-      "sources": ["src/CorsairSdk.cc"],
+      "sources": [
+        "src/CorsairSdk.cc"
+      ],
       "include_dirs": [
         "<!@(node -p \"require('node-addon-api').include\")",
         "<(module_root_dir)/CUESDK/include"
       ],
-      "cflags!": ["-fno-exceptions"],
-      "cflags_cc!": ["-fno-exceptions"],
-      "defines": ["NAPI_DISABLE_CPP_EXCEPTIONS"],
+      "cflags!": [
+        "-fno-exceptions"
+      ],
+      "cflags_cc!": [
+        "-fno-exceptions"
+      ],
+      "defines": [
+        "NAPI_DISABLE_CPP_EXCEPTIONS"
+      ],
       "conditions": [
         [
           "OS=='win'",
@@ -43,7 +52,7 @@
             ],
             "copies": [
               {
-                "destination": "<(prebuilds_path)",
+                "destination": "<(win_prebuild_path)",
                 "files": [
                   "<(module_root_dir)/CUESDK/redist/<(sdk_arch_path)/CUESDK<(sdk_arch)_2017.dll"
                 ]
@@ -54,11 +63,30 @@
         [
           "OS=='mac'",
           {
+            "libraries": [
+              "<(module_root_dir)/CUESDK/mac/CUESDK.dylib",
+              "-Wl,-rpath,<(module_root_dir)"
+            ],
             "link_settings": {
-              "libraries": ["-F/Library/Frameworks", "-framework CUESDK"]
+              "libraries": [
+                "-Wl,-rpath,@loader_path",
+                "-Wl,-rpath,@loader_path/.."
+              ]
             }
           }
         ]
+      ]
+    },
+    {
+      "target_name": "action_before_build",
+      "type": "none",
+      "copies": [
+        {
+          "destination": "<(mac_prebuild_path)",
+          "files": [
+            "<(module_root_dir)/CUESDK/mac/CUESDK.dylib"
+          ]
+        }
       ]
     }
   ]

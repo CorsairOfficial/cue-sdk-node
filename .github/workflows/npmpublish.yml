@@ -8,6 +8,8 @@ on:
 jobs:
   npm-publish:
     runs-on: windows-latest
+    needs: [prebuild-macos]
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -15,8 +17,18 @@ jobs:
         uses: actions/setup-node@master
         with:
           node-version: '14.x'
-      - run: npm ci
-      - run: npm run prebuild
+      - name: npm install and build
+        run: |
+          npm ci
+          npm run prebuild
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: prebuilds
+      - name: Unpack and remove artifact
+        run: |
+          powershell Expand-Archive -Path prebuild_macos.zip -DestinationPath .
+          del prebuild_macos.zip
       - name: Publish if version has been updated
         uses: intrueder/npm-publish@master
         with:
@@ -25,3 +37,23 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_AUTH_TOKEN}}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+  prebuild-macos:
+    runs-on: macos-10.15
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Node
+      uses: actions/setup-node@master
+      with:
+        node-version: '14.x'
+    - name: npm install and build
+      run: |
+        npm ci
+        npm run prebuild-mac
+    - name: Pack artifact
+      run: zip -r prebuild_macos prebuilds
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: prebuilds
+        path: prebuild_macos.zip
