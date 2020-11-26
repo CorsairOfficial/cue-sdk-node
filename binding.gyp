@@ -1,8 +1,7 @@
 {
   "variables": {
     "module_name%": "cuesdk",
-    "win_prebuild_path%": "<(module_root_dir)/prebuilds/win32-<(target_arch)",
-    "mac_prebuild_path%": "<(module_root_dir)/prebuilds/darwin-<(target_arch)"
+    "win_prebuild_path%": "<(module_root_dir)/prebuilds/win32-<(target_arch)"
   },
   "targets": [
     {
@@ -82,7 +81,7 @@
       "type": "none",
       "copies": [
         {
-          "destination": "<(mac_prebuild_path)",
+          "destination": "<(PRODUCT_DIR)",
           "files": [
             "<(module_root_dir)/CUESDK/mac/CUESDK.dylib"
           ]
