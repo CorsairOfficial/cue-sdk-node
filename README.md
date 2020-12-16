@@ -22,7 +22,6 @@ It uses [prebuildify](https://github.com/prebuild/prebuildify) and is prebuilt f
 
 ## macOS:
 - iCUE for macOS https://www.corsair.com/icue-mac
-- CUESDK for macOS. Download `CUESDK_3.0.xxx.dmg` from https://github.com/CorsairOfficial/cue-sdk/releases and install its contents (`CUESDK.framework`) in `/Library/Frameworks`
 
 # Installation
 
