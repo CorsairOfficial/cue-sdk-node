@@ -63,7 +63,7 @@
           "OS=='mac'",
           {
             "libraries": [
-              "<(module_root_dir)/CUESDK/mac/CUESDK.dylib",
+              "<(module_root_dir)/CUESDK/mac/libCUESDK.dylib",
               "-Wl,-rpath,<(module_root_dir)"
             ],
             "link_settings": {
@@ -83,7 +83,7 @@
         {
           "destination": "<(PRODUCT_DIR)",
           "files": [
-            "<(module_root_dir)/CUESDK/mac/CUESDK.dylib"
+            "<(module_root_dir)/CUESDK/mac/libCUESDK.dylib"
           ]
         }
       ]
