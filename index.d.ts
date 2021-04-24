@@ -1,5 +1,3 @@
-import { LogicalLayout } from '../../src/types'
-
 export enum CorsairDeviceType {
   CDT_Unknown = 0,
   CDT_Mouse = 1,
@@ -12,7 +10,7 @@ export enum CorsairDeviceType {
   CDT_MemoryModule = 8,
   CDT_Cooler = 9,
   CDT_Motherboard = 10,
-  CDT_GraphicsCard = 11
+  CDT_GraphicsCard = 11,
 }
 
 export enum CorsairPhysicalLayout {
@@ -27,7 +25,7 @@ export enum CorsairPhysicalLayout {
   CDT_MemoryModule = 8,
   CDT_Cooler = 9,
   CDT_Motherboard = 10,
-  CDT_GraphicsCard = 11
+  CDT_GraphicsCard = 11,
 }
 
 export enum CorsairLogicalLayout {
@@ -49,7 +47,7 @@ export enum CorsairLogicalLayout {
   CLL_JP = 15,
   CLL_KR = 16,
   CLL_TW = 17,
-  CLL_MEX = 18
+  CLL_MEX = 18,
 }
 
 export type CorsairLogicalLayoutString = [
@@ -71,17 +69,17 @@ export type CorsairLogicalLayoutString = [
   'CLL_JP',
   'CLL_KR',
   'CLL_TW',
-  'CLL_MEX'
-]
+  'CLL_MEX',
+];
 
 export enum CorsairDeviceCaps {
   CDC_None = 0x0000,
   CDC_Lighting = 0x0001,
-  CDC_PropertyLookup = 0x0002
+  CDC_PropertyLookup = 0x0002,
 }
 
 export enum CorsairAccessMode {
-  CAM_ExclusiveLightingControl = 0
+  CAM_ExclusiveLightingControl = 0,
 }
 
 export enum CorsairError {
@@ -90,7 +88,7 @@ export enum CorsairError {
   CE_NoControl = 2,
   CE_ProtocolHandshakeMissing = 3,
   CE_IncompatibleProtocol = 4,
-  CE_InvalidArguments = 5
+  CE_InvalidArguments = 5,
 }
 
 export type CorsairErrorString = [
@@ -99,8 +97,8 @@ export type CorsairErrorString = [
   'CE_NoControl',
   'CE_ProtocolHandshakeMissing',
   'CE_IncompatibleProtocol',
-  'CE_InvalidArguments'
-]
+  'CE_InvalidArguments',
+];
 
 export enum CorsairChannelDeviceType {
   CCDT_Invalid = 0,
@@ -113,62 +111,68 @@ export enum CorsairChannelDeviceType {
   CCDT_Pump = 7,
   CCDT_QL_Fan = 8,
   CCDT_WaterBlock = 9,
-  CCDT_SPPRO_Fan = 10
+  CCDT_SPPRO_Fan = 10,
 }
 
 export enum CorsairDevicePropertyType {
   CDPT_Boolean = 0x1000,
-  CDPT_Int32 = 0x2000
+  CDPT_Int32 = 0x2000,
 }
 
 export enum CorsairDevicePropertyId {
   CDPI_Headset_MicEnabled = 0x1000,
   CDPI_Headset_SurroundSoundEnabled = 0x1001,
   CDPI_Headset_SidetoneEnabled = 0x1002,
-  CDPI_Headset_EqualizerPreset = 0x2000
+  CDPI_Headset_EqualizerPreset = 0x2000,
 }
 
 export interface CorsairProtocolHandshake {
-  sdkVersion: string
-  serverVersion: string
-  sdkProtocolVersion: number
-  serverProtocolVersion: number
-  breakingChanges: boolean
+  sdkVersion: string;
+  serverVersion: string;
+  sdkProtocolVersion: number;
+  serverProtocolVersion: number;
+  breakingChanges: boolean;
+}
+
+export interface CorsairChannelDeviceInfo {
+  type: CorsairChannelDeviceType;
+  deviceLedCount: number;
+}
+
+export interface CorsairChannelInfo {
+  totalLedsCount: number;
+  devicesCount: number;
+  devices: Array<CorsairChannelDeviceInfo>;
+}
+
+export interface CorsairChannelsInfo {
+  channelsCount: number;
+  channels?: Array<CorsairChannelInfo>;
 }
 
 export interface CorsairDeviceInfo {
-  type: number
-  model: string
-  physicalLayout: CorsairPhysicalLayout
-  logicalLayout: CorsairLogicalLayout
-  capsMask: number
-  ledsCount: number
-  channels: {
-    channelsCount: number
-    channels?: Array<{
-      totalLedsCount: number
-      devicesCount: number
-      devices: Array<{
-        type: CorsairDeviceType
-        deviceLedCount: number
-      }>
-    }>
-  }
+  type: number;
+  model: string;
+  physicalLayout: CorsairPhysicalLayout;
+  logicalLayout: CorsairLogicalLayout;
+  capsMask: number;
+  ledsCount: number;
+  channels: CorsairChannelsInfo;
 }
 
 export interface CorsairLedColor {
-  ledId: number
-  r: number
-  g: number
-  b: number
+  ledId: number;
+  r: number;
+  g: number;
+  b: number;
 }
 
 export interface CorsairLed {
-  ledId: number
-  top: number
-  left: number
-  height: number
-  width: number
+  ledId: number;
+  top: number;
+  left: number;
+  height: number;
+  width: number;
 }
 
 /**
@@ -177,7 +181,7 @@ export interface CorsairLed {
  * @returns number
  */
 
-export function CorsairGetLastError(): number
+export function CorsairGetLastError(): number;
 
 /**
  * Function to get the amount of conntected
@@ -187,7 +191,7 @@ export function CorsairGetLastError(): number
  * @returns number
  */
 
-export function CorsairGetDeviceCount(): number
+export function CorsairGetDeviceCount(): number;
 
 /**
  * Function to check file and protocol version of CUE
@@ -195,7 +199,7 @@ export function CorsairGetDeviceCount(): number
  * @returns CorsairProtocolHandshake
  */
 
-export function CorsairPerformProtocolHandshake(): CorsairProtocolHandshake
+export function CorsairPerformProtocolHandshake(): CorsairProtocolHandshake;
 
 /**
  * Function to get the device information by
@@ -208,8 +212,8 @@ export function CorsairPerformProtocolHandshake(): CorsairProtocolHandshake
  */
 
 export function CorsairGetDeviceInfo(
-  device: number
-): CorsairDeviceInfo | undefined
+  device: number,
+): CorsairDeviceInfo | undefined;
 
 /**
  * Function to get the current color for CorsairLedColor's in an array.
@@ -223,7 +227,7 @@ export function CorsairGetDeviceInfo(
  * @returns boolean
  */
 
-export function CorsairGetLedsColors(colors: Array<CorsairLedColor>): boolean
+export function CorsairGetLedsColors(colors: Array<CorsairLedColor>): boolean;
 
 /**
  * Function to set the current color for CorsairLedColor's in an array
@@ -233,7 +237,7 @@ export function CorsairGetLedsColors(colors: Array<CorsairLedColor>): boolean
  * @returns boolean
  */
 
-export function CorsairSetLedsColors(colors: Array<CorsairLedColor>): boolean
+export function CorsairSetLedsColors(colors: Array<CorsairLedColor>): boolean;
 
 /**
  * Function to get the current color for CorsairLedColor's in an array
@@ -251,8 +255,8 @@ export function CorsairSetLedsColors(colors: Array<CorsairLedColor>): boolean
 
 export function CorsairGetLedsColorsByDeviceIndex(
   deviceIndex: number,
-  colors: Array<CorsairLedColor>
-): boolean
+  colors: Array<CorsairLedColor>,
+): boolean;
 
 /**
  * Function to set the current color for CorsairLedColor's in an array for a
@@ -268,8 +272,8 @@ export function CorsairGetLedsColorsByDeviceIndex(
 
 export function CorsairSetLedsColorsBufferByDeviceIndex(
   deviceIndex: number,
-  colors: Array<CorsairLedColor>
-): boolean
+  colors: Array<CorsairLedColor>,
+): boolean;
 
 /**
  * Function to write the previously filled buffer
@@ -279,7 +283,7 @@ export function CorsairSetLedsColorsBufferByDeviceIndex(
  * @returns boolean
  */
 
-export function CorsairSetLedsColorsFlushBuffer(): boolean
+export function CorsairSetLedsColorsFlushBuffer(): boolean;
 
 /**
  * Function to write the previously filled buffer
@@ -292,8 +296,8 @@ export function CorsairSetLedsColorsFlushBuffer(): boolean
  */
 
 export function CorsairSetLedsColorsFlushBufferAsync(
-  callback: Function
-): boolean
+  callback: Function,
+): boolean;
 
 /**
  * Function to set the current color for all CorsairLedColor's in an array
@@ -309,8 +313,8 @@ export function CorsairSetLedsColorsFlushBufferAsync(
 
 export function CorsairSetLedsColorsAsync(
   colors: Array<CorsairLedColor>,
-  callback: Function
-): boolean
+  callback: Function,
+): boolean;
 
 /**
  * Function to get an array with CorsairLed containing
@@ -320,7 +324,7 @@ export function CorsairSetLedsColorsAsync(
  * @returns Array<CorsairLed>
  */
 
-export function CorsairGetLedPositions(): Array<CorsairLed>
+export function CorsairGetLedPositions(): Array<CorsairLed>;
 
 /**
  * Function to get an array with CorsairLed containing
@@ -333,8 +337,8 @@ export function CorsairGetLedPositions(): Array<CorsairLed>
  */
 
 export function CorsairGetLedPositionsByDeviceIndex(
-  deviceIndex: number
-): Array<CorsairLed>
+  deviceIndex: number,
+): Array<CorsairLed>;
 
 /**
  * Function to get the ledId for a
@@ -344,7 +348,7 @@ export function CorsairGetLedPositionsByDeviceIndex(
  * @returns number
  */
 
-export function CorsairGetLedIdForKeyName(key: string): number
+export function CorsairGetLedIdForKeyName(key: string): number;
 
 /**
  * Function to request explusive control
@@ -352,7 +356,7 @@ export function CorsairGetLedIdForKeyName(key: string): number
  * @returns boolean
  */
 
-export function CorsairRequestControl(): boolean
+export function CorsairRequestControl(): boolean;
 
 /**
  * Function to release exclusive requested control
@@ -360,7 +364,7 @@ export function CorsairRequestControl(): boolean
  * @returns boolean
  */
 
-export function CorsairReleaseControl(): boolean
+export function CorsairReleaseControl(): boolean;
 
 /**
  * Function to set the priority for the layer. The priority
@@ -372,7 +376,7 @@ export function CorsairReleaseControl(): boolean
  * @returns boolean
  */
 
-export function CorsairSetLayerPriority(priority: number): boolean
+export function CorsairSetLayerPriority(priority: number): boolean;
 
 /**
  * Function to get the property for a device
@@ -386,8 +390,8 @@ export function CorsairSetLayerPriority(priority: number): boolean
 
 export function CorsairGetDeviceProperty(
   deviceIndex: number,
-  propertyId: number
-): void
+  propertyId: number,
+): void;
 
 /**
  * Function to subscribe to events. The callback param gets
@@ -401,10 +405,10 @@ export function CorsairGetDeviceProperty(
 
 export function CorsairSubscribeForEvents(
   callback: (event: {
-    id: 'macrokeydown' | 'macrokeyup' | 'deviceconnect' | 'devicedisconnect'
-    deviceId: string
-  }) => void
-): boolean
+    id: 'macrokeydown' | 'macrokeyup' | 'deviceconnect' | 'devicedisconnect';
+    deviceId: string;
+  }) => void,
+): boolean;
 
 /**
  * Function to unsubscribe from events
@@ -412,4 +416,4 @@ export function CorsairSubscribeForEvents(
  * @returns boolean
  */
 
-export function CorsairUnsubscribeFromEvents(): boolean
+export function CorsairUnsubscribeFromEvents(): boolean;
