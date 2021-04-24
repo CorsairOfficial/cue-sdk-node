@@ -1,3 +1,5 @@
+import { LogicalLayout } from '../../src/types'
+
 export enum CorsairDeviceType {
   CDT_Unknown = 0,
   CDT_Mouse = 1,
@@ -134,15 +136,23 @@ export interface CorsairProtocolHandshake {
   breakingChanges: boolean
 }
 
-export interface CorsairDevice {
+export interface CorsairDeviceInfo {
   type: number
   model: string
-  physicalLayout: number
-  logicalLayout: number
+  physicalLayout: CorsairPhysicalLayout
+  logicalLayout: CorsairLogicalLayout
   capsMask: number
   ledsCount: number
   channels: {
     channelsCount: number
+    channels?: Array<{
+      totalLedsCount: number
+      devicesCount: number
+      devices: Array<{
+        type: CorsairDeviceType
+        deviceLedCount: number
+      }>
+    }>
   }
 }
 
@@ -197,7 +207,9 @@ export function CorsairPerformProtocolHandshake(): CorsairProtocolHandshake
  * @returns CorsairDevice | undefined
  */
 
-export function CorsairGetDeviceInfo(device: number): CorsairDevice | undefined
+export function CorsairGetDeviceInfo(
+  device: number
+): CorsairDeviceInfo | undefined
 
 /**
  * Function to get the current color for CorsairLedColor's in an array.
@@ -337,18 +349,18 @@ export function CorsairGetLedIdForKeyName(key: string): number
 /**
  * Function to request explusive control
  *
- * @returns void
+ * @returns boolean
  */
 
-export function CorsairRequestControl(): void
+export function CorsairRequestControl(): boolean
 
 /**
  * Function to release exclusive requested control
  *
- * @returns void
+ * @returns boolean
  */
 
-export function CorsairReleaseControl(): void
+export function CorsairReleaseControl(): boolean
 
 /**
  * Function to set the priority for the layer. The priority
@@ -395,7 +407,7 @@ export function CorsairSubscribeForEvents(
 ): boolean
 
 /**
- * Function to unsubscribe to events
+ * Function to unsubscribe from events
  *
  * @returns boolean
  */
