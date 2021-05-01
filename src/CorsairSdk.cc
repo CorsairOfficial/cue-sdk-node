@@ -58,6 +58,7 @@ Napi::Value corsairGetDeviceInfo(const Napi::CallbackInfo &info)
   result["capsMask"] = deviceInfo->capsMask;
   result["ledsCount"] = deviceInfo->ledsCount;
   result["channels"] = channels;
+  result["deviceId"] = std::string(deviceInfo->deviceId);
 
   channels["channelsCount"] = deviceInfo->channels.channelsCount;
   if (deviceInfo->channels.channelsCount > 0) {
