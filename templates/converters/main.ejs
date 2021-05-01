@@ -1,0 +1,14 @@
+const enums = require('./enums');
+<% for (const e of enumtypes) { %>
+const <%= e %>Reverse = Object.create(null);
+Object.keys(enums.<%= e %>).forEach(key => {
+  <%= e %>Reverse[enums.<%= e %>[key]] = key;
+});
+
+function <%= e %>ToString(value) {
+  return <%= e %>Reverse[value];
+}
+<% } %>
+module.exports = {
+<% for (const e of enumtypes) { %>  <%= e %>ToString,
+<% }%>}

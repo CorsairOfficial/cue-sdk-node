@@ -6,8 +6,10 @@
   "description": "A Node.js native wrapper around CUE SDK",
   "repository": "https://github.com/CorsairOfficial/cue-sdk-node",
   "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "install": "node-gyp-build",
+    "gen:converters": "node templates/converters/index.js",
     "prebuild": "prebuildify --napi --arch ia32 && prebuildify --napi --arch x64",
     "prebuild-mac": "prebuildify --napi --arch x64",
     "test": "node test"
@@ -17,7 +19,8 @@
     "node-gyp-build": "4.2.3"
   },
   "devDependencies": {
-    "node-gyp": "7.1.1",
-    "prebuildify": "4.1.0"
+    "ejs": "^3.1.6",
+    "node-gyp": "^8.0.0",
+    "prebuildify": "^4.1.2"
   }
 }

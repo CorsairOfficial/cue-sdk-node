@@ -60,7 +60,7 @@ for (let i = 0; i < n; ++i) {
     Object.keys(sdk.CorsairDevicePropertyId).forEach(p => {
       const prop = sdk.CorsairGetDeviceProperty(i, sdk.CorsairDevicePropertyId[p]);
       if (!prop) {
-        console.log(p, ':', sdk.CorsairErrorString[sdk.CorsairGetLastError()]);
+        console.log(p, ':', sdk.CorsairErrorToString(sdk.CorsairGetLastError()));
       } else {
         console.log(p, prop.value);
       }

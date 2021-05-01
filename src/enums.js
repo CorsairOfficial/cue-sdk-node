@@ -50,28 +50,6 @@ const CorsairLogicalLayout = {
   CLL_MEX: 18
 }
 
-const CorsairLogicalLayoutString = [
-  'CLL_Invalid',
-  'CLL_US_Int',
-  'CLL_NA',
-  'CLL_EU',
-  'CLL_UK',
-  'CLL_BE',
-  'CLL_BR',
-  'CLL_CH',
-  'CLL_CN',
-  'CLL_DE',
-  'CLL_ES',
-  'CLL_FR',
-  'CLL_IT',
-  'CLL_ND',
-  'CLL_RU',
-  'CLL_JP',
-  'CLL_KR',
-  'CLL_TW',
-  'CLL_MEX'
-]
-
 const CorsairDeviceCaps = {
   CDC_None: 0x0000,
   CDC_Lighting: 0x0001,
@@ -90,15 +68,6 @@ const CorsairError = {
   CE_IncompatibleProtocol: 4,
   CE_InvalidArguments: 5
 }
-
-const CorsairErrorString = [
-  'CE_Success',
-  'CE_ServerNotFound',
-  'CE_NoControl',
-  'CE_ProtocolHandshakeMissing',
-  'CE_IncompatibleProtocol',
-  'CE_InvalidArguments'
-]
 
 const CorsairChannelDeviceType = {
   CCDT_Invalid: 0,
@@ -130,11 +99,9 @@ module.exports = {
   CorsairDeviceType,
   CorsairPhysicalLayout,
   CorsairLogicalLayout,
-  CorsairLogicalLayoutString,
   CorsairDeviceCaps,
   CorsairAccessMode,
   CorsairError,
-  CorsairErrorString,
   CorsairChannelDeviceType,
   CorsairDevicePropertyType,
   CorsairDevicePropertyId
