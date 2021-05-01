@@ -49,7 +49,7 @@ Napi::Value corsairGetDeviceInfo(const Napi::CallbackInfo &info)
   }
 
   auto result = Napi::Object::New(env);
-  auto channels = Napi::Object::New(env);
+  auto channels = Napi::Array::New(env);
 
   result["type"] = (int)deviceInfo->type;
   result["model"] = std::string(deviceInfo->model);
@@ -60,15 +60,11 @@ Napi::Value corsairGetDeviceInfo(const Napi::CallbackInfo &info)
   result["channels"] = channels;
   result["deviceId"] = std::string(deviceInfo->deviceId);
 
-  channels["channelsCount"] = deviceInfo->channels.channelsCount;
   if (deviceInfo->channels.channelsCount > 0) {
-    auto channelInfos = Napi::Array::New(env);
-    channels["channels"] = channelInfos;
     for (int i = 0; i < deviceInfo->channels.channelsCount; i++) {
       auto ci = deviceInfo->channels.channels[i];
       auto channelInfo = Napi::Object::New(env);
       channelInfo["totalLedsCount"] = ci.totalLedsCount;
-      channelInfo["devicesCount"] = ci.devicesCount;
       auto channelDeviceInfos = Napi::Array::New(env);
       channelInfo["devices"] = channelDeviceInfos;
       for (int di = 0; di < ci.devicesCount; di++) {
@@ -78,7 +74,7 @@ Napi::Value corsairGetDeviceInfo(const Napi::CallbackInfo &info)
         channelDeviceInfos[(uint32_t)di] = cdi;
       }
 
-      channelInfos[(uint32_t)i] = channelInfo;
+      channels[(uint32_t)i] = channelInfo;
     }
   }
 

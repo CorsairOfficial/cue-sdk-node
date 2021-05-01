@@ -126,13 +126,7 @@ export interface CorsairChannelDeviceInfo {
 
 export interface CorsairChannelInfo {
   totalLedsCount: number;
-  devicesCount: number;
   devices: Array<CorsairChannelDeviceInfo>;
-}
-
-export interface CorsairChannelsInfo {
-  channelsCount: number;
-  channels?: Array<CorsairChannelInfo>;
 }
 
 export interface CorsairDeviceInfo {
@@ -142,7 +136,7 @@ export interface CorsairDeviceInfo {
   logicalLayout: CorsairLogicalLayout;
   capsMask: number;
   ledsCount: number;
-  channels: CorsairChannelsInfo;
+  channels: Array<CorsairChannelInfo>;
   deviceId: string;
 }
 
