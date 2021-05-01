@@ -2,7 +2,7 @@
   "name": "cue-sdk",
   "author": "Corsair Memory, Inc.",
   "license": "MIT",
-  "version": "1.6.0",
+  "version": "2.0.0",
   "description": "A Node.js native wrapper around CUE SDK",
   "repository": "https://github.com/CorsairOfficial/cue-sdk-node",
   "main": "index.js",
