@@ -22,5 +22,5 @@ example
 test.js
 .prettierrc
 *.md
-CUESDK/lib
+templates
 CUESDK/redist
