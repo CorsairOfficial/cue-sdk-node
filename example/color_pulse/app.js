@@ -48,7 +48,7 @@ function main() {
   const details = sdk.CorsairPerformProtocolHandshake()
   const errCode = sdk.CorsairGetLastError()
   if (errCode !== 0) {
-    console.error(`Handshake failed: ${sdk.CorsairErrorString[errCode]}`)
+    console.error(`Handshake failed: ${sdk.CorsairErrorToString(errCode)}`)
     exit(1)
   }
 
