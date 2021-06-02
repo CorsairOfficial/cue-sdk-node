@@ -23,7 +23,23 @@ export enum CorsairPhysicalLayout {
   CPL_Zones1 = 6,
   CPL_Zones2 = 7,
   CPL_Zones3 = 8,
-  CPL_Zones4 = 9
+  CPL_Zones4 = 9,
+  CPL_Zones5 = 10,
+  CPL_Zones6 = 11,
+  CPL_Zones7 = 12,
+  CPL_Zones8 = 13,
+  CPL_Zones9 = 14,
+  CPL_Zones10 = 15,
+  CPL_Zones11 = 16,
+  CPL_Zones12 = 17,
+  CPL_Zones13 = 18,
+  CPL_Zones14 = 19,
+  CPL_Zones15 = 20,
+  CPL_Zones16 = 21,
+  CPL_Zones17 = 22,
+  CPL_Zones18 = 23,
+  CPL_Zones19 = 24,
+  CPL_Zones20 = 25
 }
 
 export enum CorsairLogicalLayout {
