@@ -2,7 +2,7 @@
   "name": "cue-sdk",
   "author": "Corsair Memory, Inc.",
   "license": "MIT",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "A Node.js native wrapper around CUE SDK",
   "repository": "https://github.com/CorsairOfficial/cue-sdk-node",
   "main": "index.js",
@@ -11,16 +11,16 @@
     "install": "node-gyp-build",
     "gen:converters": "node templates/converters/index.js",
     "prebuild": "prebuildify --napi --arch ia32 && prebuildify --napi --arch x64",
-    "prebuild-mac": "prebuildify --napi --arch x64",
+    "prebuild-mac": "prebuildify --napi --arch x64_arm64",
     "test": "node test"
   },
   "dependencies": {
-    "node-addon-api": "3.0.2",
-    "node-gyp-build": "4.2.3"
+    "node-addon-api": "4.2.0",
+    "node-gyp-build": "4.3.0"
   },
   "devDependencies": {
     "ejs": "^3.1.6",
-    "node-gyp": "^8.0.0",
-    "prebuildify": "^4.1.2"
+    "node-gyp": "^8.4.1",
+    "prebuildify": "^5.0.0"
   }
 }

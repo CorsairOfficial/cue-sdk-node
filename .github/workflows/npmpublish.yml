@@ -16,7 +16,7 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@master
         with:
-          node-version: '14.x'
+          node-version: "14.x"
       - name: npm install and build
         run: |
           npm ci
@@ -39,21 +39,21 @@ jobs:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
   prebuild-macos:
-    runs-on: macos-10.15
+    runs-on: macos-11
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Node
-      uses: actions/setup-node@master
-      with:
-        node-version: '14.x'
-    - name: npm install and build
-      run: |
-        npm ci
-        npm run prebuild-mac
-    - name: Pack artifact
-      run: zip -r prebuild_macos prebuilds
-    - name: Upload artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: prebuilds
-        path: prebuild_macos.zip
+      - uses: actions/checkout@v2
+      - name: Set up Node
+        uses: actions/setup-node@master
+        with:
+          node-version: "14.x"
+      - name: npm install and build
+        run: |
+          npm ci
+          npm run prebuild-mac
+      - name: Pack artifact
+        run: zip -r prebuild_macos prebuilds
+      - name: Upload artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: prebuilds
+          path: prebuild_macos.zip
