@@ -1,5 +1,4 @@
-cue-sdk-node
-============
+# cue-sdk-node
 
 # Intro
 
@@ -15,12 +14,14 @@ It uses [prebuildify](https://github.com/prebuild/prebuildify) and is prebuilt f
 - Node have to have N-API v4 (see [N-API Version Matrix](https://nodejs.org/api/n-api.html#n_api_n_api_version_matrix))
 
 ## Windows:
+
 - iCUE for Windows https://www.corsair.com/icue
 - Microsoft Visual C++ Redistributable for Visual Studio 2017.
   - x86 https://aka.ms/vs/15/release/VC_redist.x86.exe
-  - x64 https://aka.ms/vs/15/release/VC_redist.x64.exe 
+  - x64 https://aka.ms/vs/15/release/VC_redist.x64.exe
 
 ## macOS:
+
 - iCUE for macOS https://www.corsair.com/icue-mac
 
 # Installation
@@ -34,20 +35,23 @@ npm install cue-sdk --save
 # Usage
 
 ## 1. Create sdk instance
+
 ```js
-const sdk = require('cue-sdk');
+const sdk = require('cue-sdk')
 ```
 
 ## 2. Perform handshake
+
 ```js
-const details = sdk.CorsairPerformProtocolHandshake();
-const errCode = sdk.CorsairGetLastError();
+const details = sdk.CorsairPerformProtocolHandshake()
+const errCode = sdk.CorsairGetLastError()
 if (errCode === 0) {
   // 'CE_Success'
 }
 ```
 
 ## 3. Control your devices
+
 ```js
 const n = sdk.CorsairGetDeviceCount();
 
@@ -82,3 +86,4 @@ for (let i = 0; i < n; ++i) {
 
 - API reference: https://github.com/CorsairOfficial/cue-sdk-node/blob/master/api-reference.md
 - Code examples: https://github.com/CorsairOfficial/cue-sdk-node/tree/master/example
+- List of supported devices: https://corsairofficial.github.io/cue-sdk/#supported-devices
