@@ -112,7 +112,7 @@ export enum CorsairChannelDeviceType {
   CCDT_Pump = 7,
   CCDT_QL_Fan = 8,
   CCDT_WaterBlock = 9,
-  CCDT_SPPRO_Fan = 10,
+  CCDT_8LedSeriesFan = 10,
 }
 
 export enum CorsairDevicePropertyType {
