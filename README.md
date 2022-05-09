@@ -1,6 +1,6 @@
 # cue-sdk-node
 
-# Intro
+## Intro
 
 This wrapper can be used in node and electron apps.
 It uses [prebuildify](https://github.com/prebuild/prebuildify) and is prebuilt for some runtime environments:
@@ -9,38 +9,38 @@ It uses [prebuildify](https://github.com/prebuild/prebuildify) and is prebuilt f
 
 **Electron**: 6.0.0, 7.0.0, 8.0.0
 
-# Prerequisites
+## Prerequisites
 
 - Node have to have N-API v4 (see [N-API Version Matrix](https://nodejs.org/api/n-api.html#n_api_n_api_version_matrix))
 
-## Windows:
+### Windows
 
-- iCUE for Windows https://www.corsair.com/icue
+- iCUE for Windows <https://www.corsair.com/icue>
 - Microsoft Visual C++ Redistributable for Visual Studio 2017.
-  - x86 https://aka.ms/vs/15/release/VC_redist.x86.exe
-  - x64 https://aka.ms/vs/15/release/VC_redist.x64.exe
+  - x86 <https://aka.ms/vs/15/release/VC_redist.x86.exe>
+  - x64 <https://aka.ms/vs/15/release/VC_redist.x64.exe>
 
-## macOS:
+### macOS
 
-- iCUE for macOS https://www.corsair.com/icue-mac
+- iCUE for macOS <https://www.corsair.com/icue-mac>
 
-# Installation
+## Installation
 
-> Note: you might need to install some tools to build from source on Windows before running `npm install` : https://github.com/nodejs/node-gyp#installation
+> Note: you might need to install some tools to build from source on Windows before running `npm install` : <https://github.com/nodejs/node-gyp#installation>
 
-```
+```sh
 npm install cue-sdk --save
 ```
 
-# Usage
+## Usage
 
-## 1. Create sdk instance
+### 1. Create sdk instance
 
 ```js
 const sdk = require('cue-sdk')
 ```
 
-## 2. Perform handshake
+### 2. Perform handshake
 
 ```js
 const details = sdk.CorsairPerformProtocolHandshake()
@@ -50,7 +50,7 @@ if (errCode === 0) {
 }
 ```
 
-## 3. Control your devices
+### 3. Control your devices
 
 ```js
 const n = sdk.CorsairGetDeviceCount();
@@ -82,8 +82,8 @@ for (let i = 0; i < n; ++i) {
 }
 ```
 
-# Links
+## Links
 
-- API reference: https://github.com/CorsairOfficial/cue-sdk-node/blob/master/api-reference.md
-- Code examples: https://github.com/CorsairOfficial/cue-sdk-node/tree/master/example
-- List of supported devices: https://corsairofficial.github.io/cue-sdk/#supported-devices
+- API reference: <https://github.com/CorsairOfficial/cue-sdk-node/blob/master/api-reference.md>
+- Code examples: <https://github.com/CorsairOfficial/cue-sdk-node/tree/master/example>
+- List of supported devices: <https://corsairofficial.github.io/cue-sdk/#supported-devices>
