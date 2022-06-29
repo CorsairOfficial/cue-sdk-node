@@ -11,6 +11,8 @@ export enum CorsairDeviceType {
   CDT_Cooler = 9,
   CDT_Motherboard = 10,
   CDT_GraphicsCard = 11,
+  CDT_Touchbar = 12,
+
 }
 
 export enum CorsairPhysicalLayout {
