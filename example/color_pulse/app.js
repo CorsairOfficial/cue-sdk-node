@@ -19,10 +19,10 @@ function exit(code = 0) {
 
 function getAvailableLeds() {
   const leds = []
-  const deviceCount = sdk.CorsairGetDeviceCount()
-  for (let di = 0; di < deviceCount; ++di) {
-    const ledPositions = sdk.CorsairGetLedPositionsByDeviceIndex(di)
-    leds.push(ledPositions.map(p => ({ ledId: p.ledId, r: 0, g: 0, b: 0 })))
+  const { data: devices } = sdk.CorsairGetDevices({ deviceTypeMask: sdk.CorsairDeviceType.CDT_All })
+  for (let di = 0; di < devices.length; ++di) {
+    const { data: ledPositions } = sdk.CorsairGetLedPositions(devices[di].id)
+    leds.push({ deviceId: devices[di].id, leds: ledPositions.map(p => ({ id: p.id, r: 0, g: 0, b: 0, a: 0 })) })
   }
 
   return leds
@@ -32,25 +32,21 @@ function performPulseEffect(allLeds, x) {
   const cnt = allLeds.length
   let val = ~~((1 - (x - 1) * (x - 1)) * 255)
   for (let di = 0; di < cnt; ++di) {
-    const device_leds = allLeds[di]
-    device_leds.forEach(led => {
+    const deviceLeds = allLeds[di]
+    deviceLeds.leds.forEach(led => {
       led.r = 0
       led.g = val
-      led.b = 0
+      led.b = 0,
+      led.a = 255
     })
 
-    sdk.CorsairSetLedsColorsBufferByDeviceIndex(di, device_leds)
+    sdk.CorsairSetLedColorsBuffer(deviceLeds.deviceId, deviceLeds.leds)
   }
-  sdk.CorsairSetLedsColorsFlushBuffer()
+  sdk.CorsairSetLedColorsFlushBufferAsync()
 }
 
 function main() {
-  const details = sdk.CorsairPerformProtocolHandshake()
-  const errCode = sdk.CorsairGetLastError()
-  if (errCode !== 0) {
-    console.error(`Handshake failed: ${sdk.CorsairErrorToString(errCode)}`)
-    exit(1)
-  }
+  sdk.CorsairConnect(() => {})
 
   const availableLeds = getAvailableLeds()
   if (!availableLeds.length) {
@@ -60,7 +56,7 @@ function main() {
 
   console.log(
     'Working... Use "+" or "-" to increase or decrease speed.\n' +
-      'Press "q" to close program...'
+    'Press "q" to close program...'
   )
 
   function loop(leds, waveDuration, x) {

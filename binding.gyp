@@ -9,7 +9,7 @@
       "sources": ["src/CorsairSdk.cc"],
       "include_dirs": [
         "<!@(node -p \"require('node-addon-api').include\")",
-        "<(module_root_dir)/CUESDK/include"
+        "<(module_root_dir)/iCUESDK/include"
       ],
       "cflags!": ["-fno-exceptions"],
       "cflags_cc!": ["-fno-exceptions"],
@@ -39,13 +39,13 @@
               ]
             ],
             "libraries": [
-              "<(module_root_dir)/CUESDK/lib/<(sdk_arch_path)/CUESDK<(sdk_arch)_2017.lib"
+              "<(module_root_dir)/iCUESDK/lib/<(sdk_arch_path)/iCUESDK<(sdk_arch)_2019.lib"
             ],
             "copies": [
               {
                 "destination": "<(win_prebuild_path)",
                 "files": [
-                  "<(module_root_dir)/CUESDK/redist/<(sdk_arch_path)/CUESDK<(sdk_arch)_2017.dll"
+                  "<(module_root_dir)/iCUESDK/redist/<(sdk_arch_path)/iCUESDK<(sdk_arch)_2019.dll"
                 ]
               }
             ]
@@ -55,7 +55,7 @@
           "OS=='mac'",
           {
             "libraries": [
-              "<(module_root_dir)/CUESDK/mac/libCUESDK.dylib",
+              "<(module_root_dir)/iCUESDK/mac/libiCUESDK.dylib",
               "-Wl,-rpath,<(module_root_dir)"
             ],
             "link_settings": {
@@ -78,7 +78,7 @@
             "copies": [
               {
                 "destination": "<(PRODUCT_DIR)",
-                "files": ["<(module_root_dir)/CUESDK/mac/libCUESDK.dylib"]
+                "files": ["<(module_root_dir)/iCUESDK/mac/libiCUESDK.dylib"]
               }
             ]
           }

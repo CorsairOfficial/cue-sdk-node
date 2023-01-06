@@ -6,12 +6,20 @@ const output = path.join(__dirname, '../../src/converters.js')
 
 const data = {
   enumtypes: [
+    'CorsairError',
+    'CorsairSessionState',
     'CorsairDeviceType',
+    'CorsairEventId',
+    'CorsairDevicePropertyId',
+    'CorsairDataType',
+    'CorsairPropertyFlag',
     'CorsairPhysicalLayout',
     'CorsairLogicalLayout',
-    'CorsairAccessMode',
-    'CorsairError',
-    'CorsairChannelDeviceType'
+    'CorsairChannelDeviceType',
+    'CorsairAccessLevel',
+    'CorsairLedGroup',
+    'CorsairLedId_Keyboard',
+    'CorsairMacroKeyId'
   ]
 }
 

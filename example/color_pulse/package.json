@@ -1,6 +1,6 @@
 {
   "name": "color_pulse",
-  "version": "1.0.4",
+  "version": "1.1.0",
   "description": "",
   "scripts": {
     "start": "node app.js",
@@ -9,6 +9,6 @@
   "author": "Corsair Memory, Inc.",
   "license": "MIT",
   "dependencies": {
-    "cue-sdk": "^3.0.0"
+    "cue-sdk": "^4.0.0"
   }
 }
