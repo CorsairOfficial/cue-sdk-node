@@ -1,77 +1,88 @@
 #include <napi.h>
 #include <iCUESDK.h>
 
-Napi::ThreadSafeFunction *tsfnCorsairConnect;
+using Context = Napi::Reference<Napi::Value>;
+using FinalizerDataType = void;
+
+Napi::Object VersionToJson(Napi::Env env, CorsairVersion &version)
+{
+      auto json = Napi::Object::New(env);
+      json["major"] = version.major;
+      json["minor"] = version.minor;
+      json["patch"] = version.patch;
+      return json;
+}
+
+Napi::Object SessionDetailsToJson(Napi::Env env, CorsairSessionDetails &details)
+{
+      auto json = Napi::Object::New(env);
+      json["clientVersion"] = VersionToJson(env, details.clientVersion);
+      json["serverVersion"] = VersionToJson(env, details.serverVersion);
+      json["serverHostVersion"] = VersionToJson(env, details.serverHostVersion);
+      return json;
+}
+
+void CorsairConnectCallbackJS(Napi::Env env, Napi::Function callback, Context *context, CorsairSessionStateChanged *data);
+using TsfnCorsairConnect = Napi::TypedThreadSafeFunction<Context, CorsairSessionStateChanged, CorsairConnectCallbackJS>;
+
+TsfnCorsairConnect tsfnCorsairConnect;
+
+void CorsairConnectCallbackJS(Napi::Env env, Napi::Function callback, Context *context, CorsairSessionStateChanged *value)
+{
+  if (env != nullptr)
+  {
+    if (callback != nullptr)
+    {
+      auto data = Napi::Object::New(env);
+      data["state"] = (int)value->state;
+      data["details"] = SessionDetailsToJson(env, value->details);
+
+      auto evt = Napi::Object::New(env);
+      evt["data"] = data;
+
+      callback.Call(context->Value(), {evt});
+      delete value;
+    }
+  }
+}
+
+void CorsairConnectCallbackC(void *context, const CorsairSessionStateChanged *eventData)
+{
+  CorsairSessionStateChanged *payload = new CorsairSessionStateChanged();
+  payload->state = eventData->state;
+  payload->details = eventData->details;
+
+  tsfnCorsairConnect.BlockingCall(payload);
+};
+
 Napi::Object corsairConnect(const Napi::CallbackInfo &info)
 {
   const auto env = info.Env();
   auto result = Napi::Object::New(env);
 
-  if (info.Length() < 1 || !info[0].IsFunction())
+  if (info.Length() < 1 || !info[size_t(0)].IsFunction())
   {
     const auto err = CorsairConnect(nullptr, nullptr);
     result["error"] = (int)err;
     return result;
   }
 
-  const auto jsCallback = info[0].As<Napi::Function>();
+  Context *context = new Napi::Reference<Napi::Value>(Napi::Persistent(info.This()));
+  tsfnCorsairConnect = TsfnCorsairConnect::New(env,
+                                 info[size_t(0)].As<Napi::Function>(),
+                                 "CorsairConnect",
+                                 0,
+                                 1,
+                                 context,
+                                 [](Napi::Env, FinalizerDataType *, Context *ctx)
+                                 {
+                                   delete ctx;
+                                 });
 
-  if (tsfnCorsairConnect != nullptr)
-  {
-    tsfnCorsairConnect->Abort();
-    tsfnCorsairConnect = nullptr;
-  }
-
-  tsfnCorsairConnect = new Napi::ThreadSafeFunction();
-  *tsfnCorsairConnect = Napi::ThreadSafeFunction::New(env, jsCallback, "CorsairConnect", 0, 1);
-
-  auto cCallback = [](void *context, const CorsairSessionStateChanged *eventData)
-  {
-    auto callback = [](Napi::Env env, Napi::Function f, CorsairSessionStateChanged *value)
-    {
-      auto clientVersion = Napi::Object::New(env);
-      clientVersion["major"] = value->details.clientVersion.major;
-      clientVersion["minor"] = value->details.clientVersion.minor;
-      clientVersion["patch"] = value->details.clientVersion.patch;
-
-      auto serverVersion = Napi::Object::New(env);
-      serverVersion["major"] = value->details.serverVersion.major;
-      serverVersion["minor"] = value->details.serverVersion.minor;
-      serverVersion["patch"] = value->details.serverVersion.patch;
-
-      auto serverHostVersion = Napi::Object::New(env);
-      serverHostVersion["major"] = value->details.serverHostVersion.major;
-      serverHostVersion["minor"] = value->details.serverHostVersion.minor;
-      serverHostVersion["patch"] = value->details.serverHostVersion.patch;
-
-      auto details = Napi::Object::New(env);
-      details["clientVersion"] = clientVersion;
-      details["serverVersion"] = serverVersion;
-      details["serverHostVersion"] = serverHostVersion;
-
-      auto data = Napi::Object::New(env);
-      data["state"] = (int)value->state;
-      data["details"] = details;
-
-      auto evt = Napi::Object::New(env);
-      evt["data"] = data;
-
-      delete value;
-
-      f.Call({evt});
-    };
-
-    CorsairSessionStateChanged *payload = new CorsairSessionStateChanged();
-    payload->state = eventData->state;
-    payload->details = eventData->details;
-
-    tsfnCorsairConnect->BlockingCall(payload, callback);
-  };
-
-  const auto err = CorsairConnect(cCallback, nullptr);
+  const auto err = CorsairConnect(CorsairConnectCallbackC, context);
   if (err != CorsairError::CE_Success)
   {
-    tsfnCorsairConnect->Release();
+    tsfnCorsairConnect.Release();
     tsfnCorsairConnect = nullptr;
   }
 
@@ -86,28 +97,8 @@ Napi::Object corsairGetSessionDetails(const Napi::CallbackInfo &info)
   CorsairSessionDetails details;
   auto err = CorsairGetSessionDetails(&details);
 
-  auto clientVersion = Napi::Object::New(env);
-  clientVersion["major"] = details.clientVersion.major;
-  clientVersion["minor"] = details.clientVersion.minor;
-  clientVersion["patch"] = details.clientVersion.patch;
-
-  auto serverVersion = Napi::Object::New(env);
-  serverVersion["major"] = details.serverVersion.major;
-  serverVersion["minor"] = details.serverVersion.minor;
-  serverVersion["patch"] = details.serverVersion.patch;
-
-  auto serverHostVersion = Napi::Object::New(env);
-  serverHostVersion["major"] = details.serverHostVersion.major;
-  serverHostVersion["minor"] = details.serverHostVersion.minor;
-  serverHostVersion["patch"] = details.serverHostVersion.patch;
-
-  auto data = Napi::Object::New(env);
-  data["clientVersion"] = clientVersion;
-  data["serverVersion"] = serverVersion;
-  data["serverHostVersion"] = serverHostVersion;
-
   result["error"] = (int)err;
-  result["data"] = data;
+  result["data"] = SessionDetailsToJson(env, details);
 
   return result;
 }
@@ -117,6 +108,11 @@ Napi::Object corsairDisconnect(const Napi::CallbackInfo &info)
   const auto env = info.Env();
   auto result = Napi::Object::New(env);
   auto err = CorsairDisconnect();
+  if (tsfnCorsairConnect != nullptr)
+  {
+    tsfnCorsairConnect.Abort();
+    tsfnCorsairConnect = nullptr;
+  }
   result["error"] = (int)err;
   return result;
 }
@@ -125,7 +121,7 @@ Napi::Object corsairGetDevices(const Napi::CallbackInfo &info)
 {
   const auto env = info.Env();
   auto result = Napi::Object::New(env);
-  auto options = info[0].As<Napi::Object>();
+  auto options = info[size_t(0)].As<Napi::Object>();
 
   CorsairDeviceFilter filter;
   filter.deviceTypeMask = options.Get("deviceTypeMask").As<Napi::Number>().Int32Value();
@@ -163,7 +159,7 @@ Napi::Object corsairGetDeviceInfo(const Napi::CallbackInfo &info)
 {
   const auto env = info.Env();
   auto result = Napi::Object::New(env);
-  auto id = info[0].As<Napi::String>().Utf8Value();
+  auto id = info[size_t(0)].As<Napi::String>().Utf8Value();
 
   CorsairDeviceInfo deviceInfo;
   auto err = CorsairGetDeviceInfo(id.c_str(), &deviceInfo);
@@ -191,7 +187,7 @@ Napi::Object corsairGetLedPositions(const Napi::CallbackInfo &info)
 {
   const auto env = info.Env();
   auto result = Napi::Object::New(env);
-  auto id = info[0].As<Napi::String>().Utf8Value();
+  auto id = info[size_t(0)].As<Napi::String>().Utf8Value();
 
   CorsairLedPosition *positions = new CorsairLedPosition[CORSAIR_DEVICE_LEDCOUNT_MAX];
   int size = 0;
@@ -226,14 +222,14 @@ Napi::Object corsairSubscribeForEvents(const Napi::CallbackInfo &info)
   const auto env = info.Env();
   auto result = Napi::Object::New(env);
 
-  if (info.Length() < 1 || !info[0].IsFunction())
+  if (info.Length() < 1 || !info[size_t(0)].IsFunction())
   {
     const auto err = CorsairSubscribeForEvents(nullptr, nullptr);
     result["error"] = (int)err;
     return result;
   }
 
-  const auto jsCallback = info[0].As<Napi::Function>();
+  const auto jsCallback = info[size_t(0)].As<Napi::Function>();
 
   if (tsfnCorsairSubscribeForEvents != nullptr)
   {
@@ -322,8 +318,8 @@ Napi::Object corsairConfigureKeyEvent(const Napi::CallbackInfo &info)
 {
   const auto env = info.Env();
   auto result = Napi::Object::New(env);
-  auto id = info[0].As<Napi::String>().Utf8Value();
-  auto options = info[1].As<Napi::Object>();
+  auto id = info[size_t(0)].As<Napi::String>().Utf8Value();
+  auto options = info[size_t(1)].As<Napi::Object>();
   CorsairKeyEventConfiguration config;
   config.keyId = static_cast<CorsairMacroKeyId>(options.Get("keyId").As<Napi::Number>().Int32Value());
   config.isIntercepted = options.Get("isIntercepted").As<Napi::Boolean>();
@@ -337,8 +333,8 @@ Napi::Object corsairSetLedColors(const Napi::CallbackInfo &info)
 {
   const auto env = info.Env();
   auto result = Napi::Object::New(env);
-  auto id = info[0].As<Napi::String>().Utf8Value();
-  auto colors = info[1].As<Napi::Array>();
+  auto id = info[size_t(0)].As<Napi::String>().Utf8Value();
+  auto colors = info[size_t(1)].As<Napi::Array>();
   auto len = colors.Length();
   CorsairLedColor *ledsColors = new CorsairLedColor[len]();
   for (size_t i = 0; i < len; i++)
@@ -365,8 +361,8 @@ Napi::Object corsairSetLedColorsBuffer(const Napi::CallbackInfo &info)
 {
   const auto env = info.Env();
   auto result = Napi::Object::New(env);
-  auto id = info[0].As<Napi::String>().Utf8Value();
-  auto colors = info[1].As<Napi::Array>();
+  auto id = info[size_t(0)].As<Napi::String>().Utf8Value();
+  auto colors = info[size_t(1)].As<Napi::Array>();
   auto len = colors.Length();
   CorsairLedColor *ledsColors = new CorsairLedColor[len]();
   for (size_t i = 0; i < len; i++)
@@ -395,14 +391,14 @@ Napi::Object corsairSetLedColorsFlushBufferAsync(const Napi::CallbackInfo &info)
   const auto env = info.Env();
   auto result = Napi::Object::New(env);
 
-  if (info.Length() < 1 || !info[0].IsFunction())
+  if (info.Length() < 1 || !info[size_t(0)].IsFunction())
   {
     const auto err = CorsairSetLedColorsFlushBufferAsync(nullptr, nullptr);
     result["error"] = (int)err;
     return result;
   }
 
-  const auto jsCallback = info[0].As<Napi::Function>();
+  const auto jsCallback = info[size_t(0)].As<Napi::Function>();
   tsfnCorsairSetLedColorsFlushBufferAsync = Napi::ThreadSafeFunction::New(env, jsCallback, "CorsairSetLedColorsFlushBufferAsync", 0, 1);
   auto cCallback = [](void *context, CorsairError error)
   {
@@ -431,13 +427,13 @@ Napi::Object corsairGetLedColors(const Napi::CallbackInfo &info)
 {
   const auto env = info.Env();
   auto result = Napi::Object::New(env);
-  auto id = info[0].As<Napi::String>().Utf8Value();
-  auto colors = info[1].As<Napi::Array>();
+  auto id = info[size_t(0)].As<Napi::String>().Utf8Value();
+  auto colors = info[size_t(1)].As<Napi::Array>();
   auto len = colors.Length();
   CorsairLedColor *ledsColors = new CorsairLedColor[len]();
   for (size_t i = 0; i < len; i++)
   {
-    auto c = colors.Get(i).As<Napi::Object>();
+    auto c = colors.Get(size_t(i)).As<Napi::Object>();
     CorsairLedColor led = {
         static_cast<CorsairLedLuid>(c.Get("id").As<Napi::Number>().Int32Value()),
         static_cast<unsigned char>(c.Get("r").As<Napi::Number>().Int32Value()),
@@ -472,7 +468,7 @@ Napi::Object corsairSetLayerPriority(const Napi::CallbackInfo &info)
 {
   const auto env = info.Env();
   auto result = Napi::Object::New(env);
-  const auto priority = info[0].As<Napi::Number>().Uint32Value();
+  const auto priority = info[size_t(0)].As<Napi::Number>().Uint32Value();
   const auto err = CorsairSetLayerPriority(priority);
   result["error"] = (int)err;
   return result;
@@ -482,8 +478,8 @@ Napi::Object corsairGetLedLuidForKeyName(const Napi::CallbackInfo &info)
 {
   const auto env = info.Env();
   auto result = Napi::Object::New(env);
-  auto id = info[0].As<Napi::String>().Utf8Value();
-  const auto keyName = info[1].As<Napi::String>().Utf8Value()[0];
+  auto id = info[size_t(0)].As<Napi::String>().Utf8Value();
+  const auto keyName = info[size_t(1)].As<Napi::String>().Utf8Value()[0];
   CorsairLedLuid ledId;
   const auto err = CorsairGetLedLuidForKeyName(id.c_str(), keyName, &ledId);
   result["error"] = (int)err;
@@ -501,8 +497,8 @@ Napi::Object corsairRequestControl(const Napi::CallbackInfo &info)
 {
   const auto env = info.Env();
   auto result = Napi::Object::New(env);
-  const auto id = info[0].As<Napi::String>().Utf8Value();
-  const auto accessLevel = static_cast<CorsairAccessLevel>(info[1].As<Napi::Number>().Int32Value());
+  const auto id = info[size_t(0)].As<Napi::String>().Utf8Value();
+  const auto accessLevel = static_cast<CorsairAccessLevel>(info[size_t(1)].As<Napi::Number>().Int32Value());
   auto err = CorsairRequestControl(id.c_str(), accessLevel);
   result["error"] = (int)err;
   return result;
@@ -512,7 +508,7 @@ Napi::Object corsairReleaseControl(const Napi::CallbackInfo &info)
 {
   const auto env = info.Env();
   auto result = Napi::Object::New(env);
-  const auto id = info[0].As<Napi::String>().Utf8Value();
+  const auto id = info[size_t(0)].As<Napi::String>().Utf8Value();
   auto err = CorsairReleaseControl(id.c_str());
   result["error"] = (int)err;
   return result;
