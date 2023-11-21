@@ -20,15 +20,6 @@
           {
             "conditions": [
               [
-                "target_arch == 'ia32'",
-                {
-                  "variables": {
-                    "sdk_arch%": "",
-                    "sdk_arch_path%": "i386"
-                  }
-                }
-              ],
-              [
                 "target_arch == 'x64'",
                 {
                   "variables": {

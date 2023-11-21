@@ -33,6 +33,7 @@ const CorsairDeviceType = {
   CDT_Motherboard: 0x0200,
   CDT_GraphicsCard: 0x0400,
   CDT_Touchbar: 0x0800,
+  CDT_GameController: 0x1000,
   CDT_All: 0xFFFFFFFF
 }
 
@@ -120,7 +121,8 @@ const CorsairChannelDeviceType = {
   CCDT_DAP: 8,
   CCDT_Pump: 9,
   CCDT_DRAM: 10,
-  CCDT_WaterBlock: 11
+  CCDT_WaterBlock: 11,
+  CCDT_QX_Fan: 12
 }
 
 const CorsairAccessLevel = {
@@ -145,7 +147,8 @@ const CorsairLedGroup = {
   CLG_DIY_Channel1: 11,
   CLG_DIY_Channel2: 12,
   CLG_DIY_Channel3: 13,
-  CLG_Touchbar: 14
+  CLG_Touchbar: 14,
+  CLG_GameController: 15
 }
 
 const CorsairLedId_Keyboard = {

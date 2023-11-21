@@ -2,14 +2,14 @@
   "name": "cue-sdk",
   "author": "Corsair Memory, Inc.",
   "license": "MIT",
-  "version": "4.0.0",
+  "version": "4.0.84",
   "description": "A Node.js native wrapper around iCUE SDK",
   "repository": "https://github.com/CorsairOfficial/cue-sdk-node",
   "main": "index.js",
   "scripts": {
     "install": "node-gyp-build",
     "gen:converters": "node templates/converters/index.js",
-    "prebuild": "prebuildify --napi --arch ia32 && prebuildify --napi --arch x64",
+    "prebuild": "prebuildify --napi --arch x64",
     "prebuild-mac": "prebuildify --napi --arch x64_arm64",
     "test": "node test"
   },
